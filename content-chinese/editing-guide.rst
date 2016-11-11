@@ -12,7 +12,7 @@ GHC用户指南是格拉斯哥Haskell编译器（Glasgow Haskell Compiler）的�
 
 文档中允许Unicode字符。
 
-大部分语法和你的预期是一致的。例如：
+大部分语法和你的预期是一致的。例如，
 
 .. code-block:: rest
 
@@ -82,65 +82,61 @@ GHC用户指南是格拉斯哥Haskell编译器（Glasgow Haskell Compiler）的�
         The taxonomic order of an extinct variety of herbivorous turtles.
 
 
-Headings
-~~~~~~~~
+标题
+~~~~
 
-While ReST can accommodate a wide range of heading styles, we have standardized
-on this convention in the User's Guide,
+虽然Rest支持很多种标题的格式，但是本文档中的约定如下，
 
 .. code-block:: rest
 
-    Header level 1
+    1级标题
     ==============
 
-    Header level 2
+    2级标题
     --------------
 
-    Header level 3
+    3级标题
     ~~~~~~~~~~~~~~
 
-    Header level 4
+    4级标题
     ^^^^^^^^^^^^^^
 
 
-Formatting code
-~~~~~~~~~~~~~~~
+代码格式
+~~~~~~~~
 
 Haskell
 ^^^^^^^
 
-Code snippets can be included as both inline and block elements. Inline
-code is denoted with double-backticks whereas block of code are introduced
-by ending a paragraph with double-colons and indentation,
+代码片段可以按照行或者段落为单位添加，嵌在行内的代码可以用``包围来标识，
+代码段落则需要在上一个段落结束之后使用::开始，同时代码本身需要缩进。
 
 .. code-block:: rest
 
-    The ``fib`` function is defined as, ::
+    ``fib`` 函数可以这样定义, ::
 
         fib :: Integer -> Integer
         fib 1 = 1
         fib n = n * fib (n - 1)
 
-Which would be rendered as,
+上面的段落会被渲染成，
 
-    The ``fib`` function is defined as, ::
+    ``fib`` 函数可以这样定义, ::
 
         fib :: Integer -> Integer
         fib 1 = 1
         fib n = n * fib (n - 1)
 
-Other languages
-^^^^^^^^^^^^^^^
+其他语言
+^^^^^^^^
 
-Double-colon blocks are syntax-highlighted as Haskell by default. To avoid this
-use a
-``.. code-block`` `directive
-<http://sphinx-doc.org/markup/code.html#directive-code-block>`__ with explicit
-language designation,
+双冒号标记的段落默认会按照Haskell代码进行高亮处理。如果你需要标记其他语言请使用
+``.. code-block`` `指令
+<http://sphinx-doc.org/markup/code.html#directive-code-block>`__ 并显式指定语言。
 
 .. code-block:: rest
 
-    This is a simple shell script,
+    这是一段简单的脚本,
 
     .. code-block:: sh
 
@@ -148,111 +144,106 @@ language designation,
         echo "Hello World!"
 
 
-Links
-~~~~~
+超链接
+~~~~~~
 
-Within the Users Guide
-^^^^^^^^^^^^^^^^^^^^^^
+用户指南内部链接
+^^^^^^^^^^^^^^^^
 
-Frequently we want to give a name to a section so it can be referred to
-from other points in the document,
+经常我们需要给文档的一个小节命名，以便于在其他位置添加对其的引用，
 
 .. code-block:: rest
 
     .. _options-platform:
 
-    Platform-specific Flags
-    -----------------------
+    平台相关标志
+    ------------
 
-    There are lots of platform-specific flags.
+    有很多平台相关的标志。
 
-    Some other section
-    -------------------
+    某个其他的章节
+    --------------
 
-    GHC supports a variety of :ref:`x86 specific features <options-platform>`.
+    GHC支持很多 :ref:`x86 特定的功能 <options-platform>`。
 
-    See :ref:`options-platform` for details.
-
-
-To GHC Trac resources
-^^^^^^^^^^^^^^^^^^^^^
-
-There are special macros for conveniently linking to GHC Trac
-Wiki articles and tickets,
-
-.. code-block:: rest
-
-    See :ghc-wiki:`Commentary/Latedmd` for details on demand analysis.
-
-    See the :ghc-wiki:`coding style <Commentary/CodingStyle>` for guidelines.
-
-    See the :ghc-ticket:`123` for further discussion.
-
-    See the :ghc-ticket:`this bug <123>` for what happens when this fails.
+    请参考 :ref:`options-platform` 获取更多细节。
 
 
-To external resources
-^^^^^^^^^^^^^^^^^^^^^
+指向GHC Trac的链接
+^^^^^^^^^^^^^^^^^^
 
-External links can be written in either of these ways,
+有一些特定的宏（macro）用来方便地插入指向GHC Trac Wiki上面的文章和工单。
 
 .. code-block:: rest
 
-    See the `GHC Wiki <http://ghc.haskell.org/wiki>`_ for details.
+    请参考 :ghc-wiki:`Commentary/Latedmd` 了解关于需求分析的细节。
 
-    See the `GHC Wiki`_ for details.
+    请参考 :ghc-wiki:`coding style <Commentary/CodingStyle>` 获取指南。
+
+    请参考 :ghc-ticket:`123` 了解更多相关讨论。
+
+    请参考 :ghc-ticket:`this bug <123>` 了解失败时究竟发生了什么。
+
+
+指向外部资源的链接
+^^^^^^^^^^^^^^^^^^
+
+外部链接可以使用一下几种方式书写，
+
+.. code-block:: rest
+
+    请参考 `GHC Wiki <http://ghc.haskell.org/wiki>`_ 获取更多细节。
+
+    请参考 `GHC Wiki`_ 获取更多细节。
 
     .. _GHC Wiki: http://ghc.haskell.org/wiki
 
 
-To core library Haddock documentation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+指向核心库的Haddock文档
+^^^^^^^^^^^^^^^^^^^^^^^
 
-It is often useful to be able to refer to the Haddock documention of the
-libraries shipped with GHC. The users guide's build system provides
-commands for referring to documentation for the following core GHC packages,
+你会经常需要添加指向伴随GHC发行的核心库文档的链接。用户指南的构建系统提供
+引用核心库文档的命令，
 
 * ``base``: ``:base-ref:``
 * ``cabal``: ``:cabal-ref:``
 * ``ghc-prim``: ``:ghc-prim-ref:``
 
-For instance,
+举个例子，
 
 .. code-block:: rest
 
-    See the documentation for :base-ref:`Control.Applicative <Control-Applicative.html>`
-    for details.
+    请参考文档 :base-ref:`Control.Applicative <Control-Applicative.html>`
+    获取更多细节。
 
 
-Index entries
-~~~~~~~~~~~~~
+添加索引
+~~~~~~~~~~
 
-Index entries can be included anywhere in the document as a block element.
-They look like,
+索引可以在文档的任意位置引用所在段落，它们看上去是这样的，
     
 .. code-block:: rest
 
-    Here is some discussion on the Strict Haskell extension.
+    这里是关于Strict Haskell扩展的一些讨论。
 
     .. index::
         single: strict haskell
         single: language extensions; StrictData
 
-This would produce two entries in the index referring to the "Strict Haskell"
-section. One would be a simple "strict haskell" heading whereas the other would
-be a "StrictData" subheading under "language extensions".
+上面的例子里我们创建了指向"Strict Haskell"的索引，一个是简单的"strict haskell"标题，
+另一个则是在"language extensions"下的"StrictData"次级标题。
 
-Sadly it is not possible to use inline elements (e.g. monotype inlines) inside
-index headings.
+遗憾的是你不可以在索引标题中添加行内元素 (例如行内代码)。 
 
-Citations
----------
 
-Citations can be marked-up like this,
+引用文献
+--------
+
+引用文献可以按照如下方式标记,
 
 .. code-block:: rest
 
-    See the original paper [Doe2008]_
+    参考原论文 [Doe2008]_
 
     .. [Doe2008] John Doe and Leslie Conway.
                  "This is the title of our paper" (2008)
