@@ -1,28 +1,18 @@
-Care and feeding of your GHC Users Guide
-========================================
+为GHC用户指南贡献一份力量
+=========================
 
-The GHC User's Guide is the primary reference documentation
-for the Glasgow Haskell Compiler. Even more than this, it at times serves (for
-better or for worse) as a de-facto language standard, being the sole
-non-academic reference for many widely used language extensions.
+GHC用户指南是格拉斯哥Haskell编译器（Glasgow Haskell Compiler）的主要参考文档。不仅如此，它常常也被用来作为Haskell的语言规范（虽然有很多争议），是很多语言扩展的唯一非学术性参考。
 
-Since GHC 8.0, the User's Guide is authored in `ReStructuredText
-<https://en.wikipedia.org/wiki/ReStructuredText>`__ (or ReST or RST, for short)
-a rich but light-weight mark-up language aimed at producing documentation. The
-`Sphinx <http://sphinx-doc.org/>`__ tool is used to produce the final PDF and
-HTML documentation.
+从GHC 8.0开始，用户指南使用 `ReStructuredText <https://en.wikipedia.org/wiki/ReStructuredText>`__ (或者简称ReST、RST)，一门灵活轻量专门用于生成文档的标记语言编写， `Sphinx <http://sphinx-doc.org/>`__ 工具被用来生成最终的PDF和HTML文档。
 
-This document (also written in ReST) serves as a brief introducion to ReST and to
-document the conventions used in the User's Guide. This document is *not* intended
-to be a thorough guide to ReST. For this see the resources referenced
-`below <#references>`__.
+本篇文档（也是使用ReST编写）作为一个简单的ReST介绍，用来说明用户指南里常用的一些约定，而不是一份详尽的ReST指南。需要ReST指南的朋友可以参考 `这里 <#references>`__.
 
-Basics
-------
+基础
+----
 
-Unicode characters are allowed in the document.
+文档中允许Unicode字符。
 
-The basic syntax works largely as one would expect. For instance,
+大部分语法和你的预期是一致的。例如：
 
 .. code-block:: rest
 
@@ -30,15 +20,18 @@ The basic syntax works largely as one would expect. For instance,
     through green fields of lofty maize. Lorem ipsum dolor sit amet, consectetur
     adipiscing elit. Some lists,
 
-    1. This is a list item
+    这是一个由几句话构成的段落，紫色的乌龟穿过种满高高的玉米的绿色田野。Lorem ipsum dolor sit amet, consectetur
+    adipiscing elit. 一些列表，
 
-       a. Followed by a sub-item
-       b. And another!
-       c. Now with ``a bit of code`` and some *emphasis*.
+    1. 这是一个列表项
 
-    2. Back to the first list
+       a. 接着一个次级列表项
+       b. 然后是另一个！
+       c. 然后跟上 ``一小段代码`` 和一些 *强调*.
 
-    Or perhaps you are more of a bullet list person,
+    2. 回到外层列表
+
+    或者你更喜欢使用无序列表，
 
     * Foo
     * Fizzle
@@ -46,33 +39,34 @@ The basic syntax works largely as one would expect. For instance,
       - Bar
       - Blah
 
-    Or perhaps a definition list is in order,
+    又或者是一个定义表,
 
     *Chelonii*
         The taxonomic order consisting of modern turtles
     *Meiolaniidae*
         The taxonomic order of an extinct variety of herbivorous turtles.
 
-Note the blank lines between a list item and its sub-items. Sub-items should be
-on the same indentation level as the content of their parent items. Also note
-that no whitespace is necessary or desirable before the bullet or item number
-(lest the list be indented unnecessarily).
+注意列表项和次级列表项之间的空行，同一层级的列表项应该保持相同的缩减。
+同时注意在无序列表的符号和有序列表的数字前都不应该由空白字符（以免列表被意外缩进）。
 
-The above would be rendered as,
+上面的段落渲染效果如下,
 
     This is a paragraph containing a few sentences of text. Purple turtles walk
     through green fields of lofty maize. Lorem ipsum dolor sit amet, consectetur
     adipiscing elit. Some lists,
 
-    1. This is a list item
+    这是一个由几句话构成的段落，紫色的乌龟穿过种满高高的玉米的绿色田野。Lorem ipsum dolor sit amet, consectetur
+    adipiscing elit. 一些列表，
 
-       a. Followed by a sub-item
-       b. And another!
-       c. Now with ``a bit of code`` and some *emphasis*.
+    1. 这是一个列表项
 
-    2. Back to the first list
+       a. 接着一个次级列表项
+       b. 然后是另一个！
+       c. 然后跟上 ``一小段代码`` 和一些 *强调*.
 
-    Or perhaps you are more of a bullet list person,
+    2. 回到外层列表
+
+    或者你更喜欢使用清单，
 
     * Foo
     * Fizzle
@@ -80,7 +74,7 @@ The above would be rendered as,
       - Bar
       - Blah
 
-    Or perhaps a definition list is in order,
+    又或者是一个定义表,
 
     *Chelonii*
         The taxonomic order consisting of modern turtles

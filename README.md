@@ -59,7 +59,7 @@ export LC_ALL=en_US.UTF-8
 + win32-dlls            0%
 + bugs                  0%
 + eventlog-formats      0%
-+ editing-guide         0%
++ editing-guide         20% @winterland
 ```
 
 Kudos！
