@@ -1,38 +1,35 @@
 .. _ghci:
 
-Using GHCi
+
+使用 GHCi 
 ==========
 
 .. index::
    single: GHCi
-   single: interpreter
-   single: interactive
+   single: 解释器
+   single: 交互式
    single: Hugs
-   single: Foreign Function Interface; GHCi support
-   single: FFI; GHCi support
+   single: 外部函数接口; GHCi 支持
+   single: FFI; GHCi 支持
 
-GHCi [1]_ is GHC's interactive environment, in which Haskell expressions
-can be interactively evaluated and programs can be interpreted. If
-you're familiar with `Hugs <http://www.haskell.org/hugs/>`__, then
-you'll be right at home with GHCi. However, GHCi also has support for
-interactively loading compiled code, as well as supporting all [2]_ the
-language extensions that GHC provides. GHCi also includes an interactive
-debugger (see :ref:`ghci-debugger`).
+GHCi [1]_ 是 GHC 的交互式环境，我们可以在 GHCi 中直接输入 Haskell 表达式和程序，
+代码即刻就会被解释执行并返回结果。如果你接触过 `Hugs <http://www.haskell.org/hugs/>`__ ，
+就会发现 GHCi 很容易上手。此外，GHCi 还支持加载编译后的代码，同时也支持
+几乎全部 [2]_ 的 GHC 的语言扩展。不仅如此，GHCi 中还包含了一个交互式调试器 (参见 :ref:`ghci-debugger`)
 
 .. [1]
-   The "i" stands for “Interactive”
+   "i" 代表交互式 (”Interactive”)
 
 .. [2]
-   except ``foreign export``, at the moment
+   当前并不包括 ``foreign export``
 
 
 .. _ghci-introduction:
 
-Introduction to GHCi
+GHCi 简介
 --------------------
 
-Let's start with an example GHCi session. You can fire up GHCi with the
-command ``ghci``:
+让我们从运行 GHCi 开始。你可以通过 ``ghci`` 命令来打开 GHCi。
 
 .. code-block:: none
 
@@ -40,17 +37,16 @@ command ``ghci``:
     GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
     Prelude>
 
-There may be a short pause while GHCi loads the prelude and standard
-libraries, after which the prompt is shown. As the banner says, you can
-type :ghci-cmd:`:?` to see the list of commands available, and a half line
-description of each of them. We'll explain most of these commands as we
-go along, and there is complete documentation for all the commands in
-:ref:`ghci-commands`.
+由于要加载 prelude 和一些标准库，我们需要短暂等待 GHCi 完成启动并显示出提示符，
+然后就像头一行提示语上写的, 输入 :ghci-cmd:`:?` ，你就可以看到所有可用命令，
+并且每个命令都会有半行的描述。后续我们会介绍其中的大部分命令，而如需查看完整
+全部命令，则可翻阅 :ref:`ghci-commands` 一节。
 
-Haskell expressions can be typed at the prompt:
+
+可以在提示符后直接输入 Haskell 表达式：
 
 .. index::
-   single: prompt; GHCi
+   single: 提示符; GHCi
 
 .. code-block:: none
 
@@ -60,14 +56,13 @@ Haskell expressions can be typed at the prompt:
     4.666666666666667
     Prelude>
 
-GHCi interprets the whole line as an expression to evaluate. The
-expression may not span several lines - as soon as you press enter, GHCi
-will attempt to evaluate it.
+GHCi 将整行代码作为表达式进行解释并计算结果。不允许多行的表达式，只要
+按下回车，GHCi 就会直接执行计算
 
-In Haskell, a ``let`` expression is followed by ``in``. However, in
-GHCi, since the expression can also be interpreted in the ``IO`` monad,
-a ``let`` binding with no accompanying ``in`` statement can be signalled
-by an empty line, as in the above example.
+在 Haskell 中，``let`` 表达式后面得跟着 ``in`` ，但在 GHCi 中，表达式也可以被
+当作实在 ``IO`` Monad 中执行，因此 ``let`` 后面也可以不跟 ``in`` ，而得到的反馈
+就是一个空行，亦如上例。（译者注：上例中并无 let 后不跟 in 的情况） 
+
 
 .. _loading-source-files:
 
