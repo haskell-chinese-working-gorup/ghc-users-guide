@@ -46,8 +46,8 @@ export LC_ALL=en_US.UTF-8
     + packages                 0% @winterland
     + codegens                 0% @winterland 
     + phases                   0% @winterland
-    + shared_libs              0%
-    + debugging                0%
+    + shared_libs              0% @sunyx2016 
+    + debugging                0% @sunyx2016
 + profiling             0%  
 + sooner                0%
 + lang                  0%
