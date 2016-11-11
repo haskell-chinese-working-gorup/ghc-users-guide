@@ -73,3 +73,4 @@ Kudos！
 + [HaotianXue](https://github.com/orgs/haskell-chinese-working-group/people/HaotianXue)
 + [kdepp](https://github.com/orgs/haskell-chinese-working-group/people/kdepp)
 + [Yao Lu](https://github.com/orgs/haskell-chinese-working-group/people/ruujoa)
++ [sunyx2016]https://github.com/sunyx2016
