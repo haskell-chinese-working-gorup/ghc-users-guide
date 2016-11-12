@@ -66,28 +66,26 @@ GHCi 将整行代码作为表达式进行解释并计算结果。不允许多行
 
 .. _loading-source-files:
 
-Loading source files
+加载源文件
 --------------------
 
-Suppose we have the following Haskell source code, which we place in a
-file ``Main.hs``: ::
+假设我们在 ``Main.hs`` 文件中保存了如下源代码：::
 
     main = print (fac 20)
 
     fac 0 = 1
     fac n = n * fac (n-1)
 
-You can save ``Main.hs`` anywhere you like, but if you save it somewhere
-other than the current directory [3]_ then we will need to change to the
-right directory in GHCi:
+我们可以把 ``Main.hs`` 存在任何地方，不过，如果并没有存在当前目录下 [3]_ ，
+那就需要先在 GHCi 中切换到正确的目录。
 
 .. code-block:: none
 
     Prelude> :cd dir
 
-where ⟨dir⟩ is the directory (or folder) in which you saved ``Main.hs``.
+这里的 (dir) 就是你保存 ``Main.hs`` 的那个目录。
 
-To load a Haskell source file into GHCi, use the :ghci-cmd:`:load` command:
+然后使用 :ghci-cmd:`:load` 来把 Haskell 源文件加载进 GHCi。
 
 .. index::
    single: :load
@@ -99,90 +97,74 @@ To load a Haskell source file into GHCi, use the :ghci-cmd:`:load` command:
     Ok, modules loaded: Main.
     *Main>
 
-GHCi has loaded the ``Main`` module, and the prompt has changed to
-``*Main>`` to indicate that the current context for expressions
-typed at the prompt is the ``Main`` module we just loaded (we'll explain
-what the ``*`` means later in :ref:`ghci-scope`). So we can now type
-expressions involving the functions from ``Main.hs``:
+GHCi 加载完 ``Main`` 模块，提示符变成 ``*Main>>`` ， 表示后续输入的表达式
+都将在刚刚载入的 ``Main`` 模块的环境下运行（我们会在后面 :ref:`ghci-scope` 
+一章中解释这里的 ``*`` 是什么意思）。然后我们就可以使用 ``Main.hs`` 中
+定义的函数来写点表达式了：
 
 .. code-block:: none
 
     *Main> fac 17
     355687428096000
 
-Loading a multi-module program is just as straightforward; just give the
-name of the "topmost" module to the :ghci-cmd:`:load` command (hint:
-:ghci-cmd:`:load` can be abbreviated to ``:l``). The topmost module will
-normally be ``Main``, but it doesn't have to be. GHCi will discover which
-modules are required, directly or indirectly, by the topmost module, and load
-them all in dependency order.
+加载包含多模块的程序也是一样的，直接用 :ghci-cmd:`:load` 命令载入“最顶层”的
+模块即可（提示：:ghci-cmd:`:load` 可以被简写为 ``:l`` ）。通常最顶层的模块
+就是 ``Main`` ，但也可以是其它的。GHCi 会通过最顶层的模块来判断，哪些模块
+被引用了，直接的还是间接的，并把它们按照依赖顺序加载进来。
 
 .. [3]
-   If you started up GHCi from the command line then GHCi's current
-   directory is the same as the current directory of the shell from
-   which it was started. If you started GHCi from the “Start” menu in
-   Windows, then the current directory is probably something like
+   如果是从命令行启动 GHCi，GHCi 的当前目录就是 shell 所在的目录。
+   如果是从 Windows 的开始菜单启动 GHCi，那当前目录就可能是类似这样的
    ``C:\Documents and Settings\user name``.
 
 
 .. _ghci-modules-filenames:
 
-Modules vs. filenames
+模块 vs. 文件名
 ~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
-   single: modules; and filenames
-   single: filenames; of modules
+   single: 模块; 与文件名
+   single: 文件名; 模块的
 
-Question: How does GHC find the filename which contains module ⟨M⟩?
-Answer: it looks for the file ``M.hs``, or ``M.lhs``. This means that
-for most modules, the module name must match the filename. If it
-doesn't, GHCi won't be able to find it.
+问：GHC 是如何找到包含模块 (M) 的文件的？
+答：GHC 会去找名为 ``M.hs`` 或 ``M.lhs`` 的文件。所以对大部分模块来说，
+你的模块名需要和文件名保持一致。否则，GHC 就没法找到它。
 
-There is one exception to this general rule: when you load a program
-with :ghci-cmd:`:load`, or specify it when you invoke ``ghci``, you can give a
-filename rather than a module name. This filename is loaded if it
-exists, and it may contain any module you like. This is particularly
-convenient if you have several ``Main`` modules in the same directory
-and you can't call them all ``Main.hs``.
+此通用规则有一个例外：当你通过 :ghci-cmd:`:load` 加载一个程序，或直接在
+启动 ``ghci`` 时就指定一个待加载程序时，你也可以不用模块名，而是直接使用
+文件名。只要这个文件名存在，那无论里面的模块名是什么，都会被加载。这一点
+对于同一文件夹里包含多个 ``Main`` 模块的情况，就会很方便，因为肯定不能把
+这些文件都命名为 ``Main.hs`` 。
 
-The search path for finding source files is specified with the :ghc-flag:`-i`
-option on the GHCi command line, like so:
+可以在 GHCi 命令行中通过 :ghc-flag:`-i` 来指定查找源文件的搜索路径，比如：
 
 .. code-block:: none
 
     ghci -idir1:...:dirn
 
-or it can be set using the :ghci-cmd:`:set` command from within GHCi (see
-:ref:`ghci-cmd-line-options`) [4]_
+也可以在 GHCi 中通过 :ghci-cmd:`:set` 命令来设置 （参见 :ref:`ghci-cmd-line-options` ）[4]_
 
-One consequence of the way that GHCi follows dependencies to find
-modules to load is that every module must have a source file. The only
-exception to the rule is modules that come from a package, including the
-``Prelude`` and standard libraries such as ``IO`` and ``Complex``. If
-you attempt to load a module for which GHCi can't find a source file,
-even if there are object and interface files for the module, you'll get
-an error message.
+GHCi 通过依赖关系来确定要加载的模块，其结果之一就是需要满足一个模块一个文件。
+唯一的例外是来那些自于包 (package) 的模块，其中包括 ``Prelude`` 和一些标准库，
+如比 ``IO`` 和 ``Complex`` 。如果 GHCi 找不到你想要加载的模块的源文件，即使
+存在该模块的目标文件和接口文件，你也会得到一个错误信息，
 
 .. [4]
-   Note that in GHCi, and :ghc-flag:`--make` mode, the :ghc-flag:`-i` option is used to
-   specify the search path for *source* files, whereas in standard
-   batch-compilation mode the :ghc-flag:`-i` option is used to specify the
-   search path for interface files, see :ref:`search-path`.
+   注意，在GHCi 中，如果开启了 :ghc-flag:`--make` 模式，那 :ghc-flag:`-i` 就是
+   用来指定*源*文件的搜索路径的，而在标准的分批编译模式下， :ghc-flag:`-i` 则是
+   用来指定接口文件的搜索路径的，参见 :ref:`search-path` 。
 
 
-Making changes and recompilation
+文件修改与重新编译
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
    single: :reload
 
-If you make some changes to the source code and want GHCi to recompile
-the program, give the :ghci-cmd:`:reload` command. The program will be
-recompiled as necessary, with GHCi doing its best to avoid actually
-recompiling modules if their external dependencies haven't changed. This
-is the same mechanism we use to avoid re-compiling modules in the batch
-compilation setting (see :ref:`recomp`).
+如果你修改了源文件并希望 GHCi 能够重新编译程序，此时就可以使用 :ghci-cmd:`:reload` 命令。
+程序会按需要进行重新编译，而实际上，GHCi 会尽量避免在外部依赖没有变化的情况下重新编译模块。
+在分批编译的模式下，也有同样的机制来避免没有必要的重新编译（参见 :ref:`recomp` ）。
 
 .. _ghci-compiled:
 
