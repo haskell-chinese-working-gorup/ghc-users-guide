@@ -33,7 +33,7 @@ export LC_ALL=en_US.UTF-8
 + license               0% (暂定不需要翻译)
 + intro                 0%  @Balter Notz
 + 8.2.1-notes           0%  @Balter Notz 
-+ ghci                  0%  @kdepp       -- THIS IS A HARD ONE!
++ ghci                  25%  @kdepp       -- THIS IS A HARD ONE!
 + runghc                0%  @Bo Yang 
 + usage                 0% 
     + using                    0% @Bo Yang
