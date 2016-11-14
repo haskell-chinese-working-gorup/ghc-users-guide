@@ -1,16 +1,16 @@
-为GHC用户指南贡献一份力量
+为 GHC 用户指南贡献一份力量
 =========================
 
-GHC用户指南是格拉斯哥Haskell编译器（Glasgow Haskell Compiler）的主要参考文档。不仅如此，它常常也被用来作为Haskell的语言规范（虽然有很多争议），是很多语言扩展的唯一非学术性参考。
+GHC 用户指南是格拉斯哥 Haskell 编译器（Glasgow Haskell Compiler）的主要参考文档。不仅如此，它常常也被用来作为 Haskell 的语言规范（虽然有很多争议），是很多语言扩展的唯一非学术性参考。
 
-从GHC 8.0开始，用户指南使用 `ReStructuredText <https://en.wikipedia.org/wiki/ReStructuredText>`__ (或者简称ReST、RST)，一门灵活轻量专门用于生成文档的标记语言编写， `Sphinx <http://sphinx-doc.org/>`__ 工具被用来生成最终的PDF和HTML文档。
+从 GHC 8.0 开始，用户指南使用 `ReStructuredText <https://en.wikipedia.org/wiki/ReStructuredText>`__ (或者简称 ReST, RST )，一门灵活轻量专门用于生成文档的标记语言编写， `Sphinx <http://sphinx-doc.org/>`__ 工具被用来生成最终的 PDF 和 HTML 文档。
 
-本篇文档（也是使用ReST编写）作为一个简单的ReST介绍，用来说明用户指南里常用的一些约定，而不是一份详尽的ReST指南。需要ReST指南的朋友可以参考 `这里 <#references>`__.
+本篇文档（也是使用 ReST 编写）作为一个简单的 ReST 介绍，用来说明用户指南里常用的一些约定，而不是一份详尽的 ReST 指南。需要 ReST 指南的朋友可以参考 `这里 <#references>`__.
 
 基础
 ----
 
-文档中允许Unicode字符。
+文档中允许 Unicode 字符。
 
 大部分语法和你的预期是一致的。例如，
 
@@ -85,7 +85,7 @@ GHC用户指南是格拉斯哥Haskell编译器（Glasgow Haskell Compiler）的�
 标题
 ~~~~
 
-虽然Rest支持很多种标题的格式，但是本文档中的约定如下，
+虽然 Rest 支持很多种标题的格式，但是本文档中的约定如下，
 
 .. code-block:: rest
 
@@ -130,7 +130,7 @@ Haskell
 其他语言
 ^^^^^^^^
 
-双冒号标记的段落默认会按照Haskell代码进行高亮处理。如果你需要标记其他语言请使用
+双冒号标记的段落默认会按照 Haskell 代码进行高亮处理。如果你需要标记其他语言请使用
 ``.. code-block`` `指令
 <http://sphinx-doc.org/markup/code.html#directive-code-block>`__ 并显式指定语言。
 
@@ -164,7 +164,7 @@ Haskell
     某个其他的章节
     --------------
 
-    GHC支持很多 :ref:`x86 特定的功能 <options-platform>`。
+    GHC 支持很多 :ref:`x86 特定的功能 <options-platform>`。
 
     请参考 :ref:`options-platform` 获取更多细节。
 
@@ -172,7 +172,7 @@ Haskell
 指向GHC Trac的链接
 ^^^^^^^^^^^^^^^^^^
 
-有一些特定的宏（macro）用来方便地插入指向GHC Trac Wiki上面的文章和工单。
+有一些特定的宏（macro）用来方便地插入指向 GHC Trac Wiki 上面的文章和工单。
 
 .. code-block:: rest
 
@@ -199,10 +199,10 @@ Haskell
     .. _GHC Wiki: http://ghc.haskell.org/wiki
 
 
-指向核心库的Haddock文档
-^^^^^^^^^^^^^^^^^^^^^^^
+指向核心库的 Haddock 文档
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-你会经常需要添加指向伴随GHC发行的核心库文档的链接。用户指南的构建系统提供
+你会经常需要添加指向伴随 GHC 发行的核心库文档的链接。用户指南的构建系统提供
 引用核心库文档的命令，
 
 * ``base``: ``:base-ref:``
@@ -228,10 +228,10 @@ Haskell
 
     .. index::
         single: strict haskell
-        single: language extensions; StrictData
+        single: 语言扩展; StrictData
 
-上面的例子里我们创建了指向"Strict Haskell"的索引，一个是简单的"strict haskell"标题，
-另一个则是在"language extensions"下的"StrictData"次级标题。
+上面的例子里我们创建了指向 "Strict Haskell" 的索引，一个是简单的 "strict haskell" 标题索引，
+另一个则是在"语言扩展"下的 "StrictData" 次级标题索引。
 
 遗憾的是你不可以在索引标题中添加行内元素 (例如行内代码)。 
 
@@ -249,26 +249,25 @@ Haskell
                  "This is the title of our paper" (2008)
 
 
-Admonitions
------------
+警告（Admonitions）
+------------------
 
-`Admonitions`_ are block elements used to draw the readers attention to a point.
-They should not be over-used for the sake of readability but they can be quite
-effective in separating and drawing attention to points of importance,
+`Admonitions`_ 是用来引起读者注意的段落，它们可以有效的把段落从上下文中凸显出来从而达到吸引注意力的作用，
+但是出于可读性的考虑你也不应该过分依赖它们。
 
 .. code-block:: rest
 
     .. important::
 
-        Be friendly and supportive to your fellow contributors.
+        请友好地对待贡献者们，并给予力所能及的支持。
 
-Would be rendered as,
+会被渲染成,
 
     .. important::
 
-        Be friendly and supportive to your fellow contributors.
+        请友好地对待贡献者们，并给予力所能及的支持。
 
-There are a number of admonitions types,
+以下是几种警告的类型，
 
 .. hlist::
     :columns: 3
@@ -286,19 +285,17 @@ There are a number of admonitions types,
 
 .. _Admonitions: http://docutils.sourceforge.net/docs/ref/rst/directives.html#admonitions
 
-Documenting command-line options and GHCi commands
---------------------------------------------------
+给命令行参数和 GHCi 命令书写文档
+--------------------------------
 
-:file:`conf.py` defines a few Sphinx object types for GHCi commands
-(``ghci-cmd``), :program:`ghc` command-line options (``ghc-flag``), and runtime
-:system options (``rts-flag``),
+:file:`conf.py` 定义了一些 Sphinx 对象类型用于书写 GHCi 命令（``ghci-cmd``）, :program:`ghc` 
+命令行参数（``ghc-flag``），以及运行时参数（``rts-flag``）。
 
-Command-line options
-~~~~~~~~~~~~~~~~~~~~
+命令行参数
+~~~~~~~~~~
 
-The ``ghc-flag`` and ``rts-flag`` roles/directives can be used to document
-command-line arguments to the :program:`ghc` executable and runtime system,
-respectively. For instance,
+``ghc-flag`` 和 ``rts-flag`` 指令分别用来书写 :program:`ghc` 可执行文件和运行时的命令行参数的文档，
+举个例子，
 
 .. code-block:: rest
 
@@ -308,7 +305,7 @@ respectively. For instance,
 
        Sets the context switch interval to ⟨s⟩ seconds.
 
-Will be rendered as,
+会被渲染为,
 
     .. rts-flag:: -C <seconds>
 
@@ -316,13 +313,12 @@ Will be rendered as,
 
        Sets the context switch interval to ⟨s⟩ seconds.
 
-and will have an associated index entry generated automatically.
+同时会自动生成对应的索引项。
 
-GHCi commands
-~~~~~~~~~~~~~
+GHCi 命令
+~~~~~~~~~
 
-The ``ghci-cmd`` role and directive can be used to document GHCi directives. For
-instance, we can describe the GHCi ``:module`` command,
+``ghci-cmd`` 指令被用来给 GHCi 命令添加文档. 例如, 我们可以这样来说明 GHCi 的 ``:module`` 命令,
 
 .. code-block:: rest
 
@@ -330,49 +326,45 @@ instance, we can describe the GHCi ``:module`` command,
 
         Load a module
 
-which will be rendered as,
+会被渲染为，
 
     .. ghci-cmd:: :module [*] <file>
 
         Load a module
 
-And later refer to it by just the command name, ``:module``,
+之后就可以使用命令 ``:module`` 来引用它了，
 
 .. code-block:: rest
 
     The GHCi :ghci-cmd:`:load` and :ghci-cmd:`:module` commands are used
     to modify the modules in scope.
 
-Like command-line options, GHCi commands will have associated index entries
-generated automatically.
+和命令行参数一样，GHCi 命令也会自动生成对应的索引项。
+    
+样式约定
+--------
 
-Style Conventions
------------------
+当说明用户命令时，一个常见的需求是标记可自定义的分词位置，在本文档中我们使用约定 
+``⟨subst⟩`` 来表示（注意这些是三角括号 ``U+27E8`` 和 ``U+27E9`` ，而不是小于／大于号）。
 
-When describing user commands and the like it is common to need to denote
-user-substitutable tokens. In this document we use the convention, ``⟨subst⟩``
-(note that these are angle brackets, ``U+27E8`` and ``U+27E9``, not
-less-than/greater-than signs).
+.. important::
 
+    出于视觉上的协调，本文档约定在中英文之间应该增加半角空格。
 
 .. _references:
 
-GHC command-line options reference
-----------------------------------
+GHC 命令行参数参考
+------------------
 
-The tabular nature of GHC flags reference (:file:`flags.rst`) makes it very
-difficult to maintain as ReST. For this reason it is generated by
-:file:`utils/mkUserGuidePart`. Any command-line options added to GHC should
-be added to the appropriate file in :file:`utils/mkUserGuidePart/Options`.
+GHC 命令行选项和参数表格（:file:`flags.rst` ）不适合使用 ReST 来书写，因此它是通过 :file:`utils/mkUserGuidePart` 自动生成的。任何加入 GHC 的命令行选项都应同时被加入 :file:`utils/mkUserGuidePart/Options` 的对应文件中。
 
+ReST 参考材料
+-------------
 
-ReST reference materials
-------------------------
-
-* `Sphinx ReST Primer`_: A great place to start.
-* `Sphinx extensions`_: How Sphinx extends ReST
-* `ReST reference`_: When you really need the details.
-* `Directives reference`_
+* `Sphinx ReST Primer`_: 一个很好的开始。
+* `Sphinx extensions`_: Sphinx 是如何扩展 ReST 的。
+* `ReST reference`_: 当你需要更多细节时。
+* `Directives reference`_: 指令参考。
 
 .. _Sphinx ReST Primer: http://sphinx-doc.org/rest.html
 .. _ReST reference: http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
