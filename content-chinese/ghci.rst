@@ -1,38 +1,35 @@
 .. _ghci:
 
-Using GHCi
+
+使用 GHCi
 ==========
 
 .. index::
    single: GHCi
-   single: interpreter
-   single: interactive
+   single: 解释器
+   single: 交互式
    single: Hugs
-   single: Foreign Function Interface; GHCi support
-   single: FFI; GHCi support
+   single: 外部函数接口; GHCi 支持
+   single: FFI; GHCi 支持
 
-GHCi [1]_ is GHC's interactive environment, in which Haskell expressions
-can be interactively evaluated and programs can be interpreted. If
-you're familiar with `Hugs <http://www.haskell.org/hugs/>`__, then
-you'll be right at home with GHCi. However, GHCi also has support for
-interactively loading compiled code, as well as supporting all [2]_ the
-language extensions that GHC provides. GHCi also includes an interactive
-debugger (see :ref:`ghci-debugger`).
+GHCi [1]_ 是 GHC 的交互式环境，我们可以在 GHCi 中直接输入 Haskell 表达式和程序，
+代码即刻就会被解释执行并返回结果。如果你接触过 `Hugs <http://www.haskell.org/hugs/>`__ ，
+就会发现 GHCi 很容易上手。此外，GHCi 还支持加载编译后的代码，同时也支持
+几乎全部 [2]_ 的 GHC 的语言扩展。不仅如此，GHCi 中还包含了一个交互式调试器 (参见 :ref:`ghci-debugger`)
 
 .. [1]
-   The "i" stands for “Interactive”
+   "i" 代表交互式 (”Interactive”)
 
 .. [2]
-   except ``foreign export``, at the moment
+   当前并不包括 ``foreign export``
 
 
 .. _ghci-introduction:
 
-Introduction to GHCi
+GHCi 简介
 --------------------
 
-Let's start with an example GHCi session. You can fire up GHCi with the
-command ``ghci``:
+让我们从运行 GHCi 开始。你可以通过 ``ghci`` 命令来打开 GHCi。
 
 .. code-block:: none
 
@@ -40,17 +37,16 @@ command ``ghci``:
     GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
     Prelude>
 
-There may be a short pause while GHCi loads the prelude and standard
-libraries, after which the prompt is shown. As the banner says, you can
-type :ghci-cmd:`:?` to see the list of commands available, and a half line
-description of each of them. We'll explain most of these commands as we
-go along, and there is complete documentation for all the commands in
-:ref:`ghci-commands`.
+由于要加载 prelude 和一些标准库，我们需要短暂等待 GHCi 完成启动并显示出提示符，
+然后就像头一行提示语上写的, 输入 :ghci-cmd:`:?` ，你就可以看到所有可用命令，
+并且每个命令都会有半行的描述。后续我们会介绍其中的大部分命令，而如需查看完整
+全部命令，则可翻阅 :ref:`ghci-commands` 一节。
 
-Haskell expressions can be typed at the prompt:
+
+可以在提示符后直接输入 Haskell 表达式：
 
 .. index::
-   single: prompt; GHCi
+   single: 提示符; GHCi
 
 .. code-block:: none
 
@@ -60,39 +56,36 @@ Haskell expressions can be typed at the prompt:
     4.666666666666667
     Prelude>
 
-GHCi interprets the whole line as an expression to evaluate. The
-expression may not span several lines - as soon as you press enter, GHCi
-will attempt to evaluate it.
+GHCi 将整行代码作为表达式进行解释并计算结果。不允许多行的表达式，只要
+按下回车，GHCi 就会直接执行计算
 
-In Haskell, a ``let`` expression is followed by ``in``. However, in
-GHCi, since the expression can also be interpreted in the ``IO`` monad,
-a ``let`` binding with no accompanying ``in`` statement can be signalled
-by an empty line, as in the above example.
+在 Haskell 中，``let`` 表达式后面得跟着 ``in`` ，但在 GHCi 中，表达式也可以被
+当作实在 ``IO`` Monad 中执行，因此 ``let`` 后面也可以不跟 ``in`` ，而得到的反馈
+就是一个空行，亦如上例。（译者注：上例中并无 let 后不跟 in 的情况）
+
 
 .. _loading-source-files:
 
-Loading source files
+加载源文件
 --------------------
 
-Suppose we have the following Haskell source code, which we place in a
-file ``Main.hs``: ::
+假设我们在 ``Main.hs`` 文件中保存了如下源代码：::
 
     main = print (fac 20)
 
     fac 0 = 1
     fac n = n * fac (n-1)
 
-You can save ``Main.hs`` anywhere you like, but if you save it somewhere
-other than the current directory [3]_ then we will need to change to the
-right directory in GHCi:
+我们可以把 ``Main.hs`` 存在任何地方，不过，如果并没有存在当前目录下 [3]_ ，
+那就需要先在 GHCi 中切换到正确的目录。
 
 .. code-block:: none
 
     Prelude> :cd dir
 
-where ⟨dir⟩ is the directory (or folder) in which you saved ``Main.hs``.
+这里的 (dir) 就是你保存 ``Main.hs`` 的那个目录。
 
-To load a Haskell source file into GHCi, use the :ghci-cmd:`:load` command:
+然后使用 :ghci-cmd:`:load` 来把 Haskell 源文件加载进 GHCi。
 
 .. index::
    single: :load
@@ -104,116 +97,96 @@ To load a Haskell source file into GHCi, use the :ghci-cmd:`:load` command:
     Ok, modules loaded: Main.
     *Main>
 
-GHCi has loaded the ``Main`` module, and the prompt has changed to
-``*Main>`` to indicate that the current context for expressions
-typed at the prompt is the ``Main`` module we just loaded (we'll explain
-what the ``*`` means later in :ref:`ghci-scope`). So we can now type
-expressions involving the functions from ``Main.hs``:
+GHCi 加载完 ``Main`` 模块，提示符变成 ``*Main>>`` ， 表示后续输入的表达式
+都将在刚刚载入的 ``Main`` 模块的环境下运行（我们会在后面 :ref:`ghci-scope`
+一章中解释这里的 ``*`` 是什么意思）。然后我们就可以使用 ``Main.hs`` 中
+定义的函数来写点表达式了：
 
 .. code-block:: none
 
     *Main> fac 17
     355687428096000
 
-Loading a multi-module program is just as straightforward; just give the
-name of the "topmost" module to the :ghci-cmd:`:load` command (hint:
-:ghci-cmd:`:load` can be abbreviated to ``:l``). The topmost module will
-normally be ``Main``, but it doesn't have to be. GHCi will discover which
-modules are required, directly or indirectly, by the topmost module, and load
-them all in dependency order.
+加载包含多模块的程序也是一样的，直接用 :ghci-cmd:`:load` 命令载入“最顶层”的
+模块即可（提示：:ghci-cmd:`:load` 可以被简写为 ``:l`` ）。通常最顶层的模块
+就是 ``Main`` ，但也可以是其它的。GHCi 会通过最顶层的模块来判断，哪些模块
+被引用了，直接的还是间接的，并把它们按照依赖顺序加载进来。
 
 .. [3]
-   If you started up GHCi from the command line then GHCi's current
-   directory is the same as the current directory of the shell from
-   which it was started. If you started GHCi from the “Start” menu in
-   Windows, then the current directory is probably something like
+   如果是从命令行启动 GHCi，GHCi 的当前目录就是 shell 所在的目录。
+   如果是从 Windows 的开始菜单启动 GHCi，那当前目录就可能是类似这样的
    ``C:\Documents and Settings\user name``.
 
 
 .. _ghci-modules-filenames:
 
-Modules vs. filenames
+模块 vs. 文件名
 ~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
-   single: modules; and filenames
-   single: filenames; of modules
+   single: 模块; 与文件名
+   single: 文件名; 模块的
 
-Question: How does GHC find the filename which contains module ⟨M⟩?
-Answer: it looks for the file ``M.hs``, or ``M.lhs``. This means that
-for most modules, the module name must match the filename. If it
-doesn't, GHCi won't be able to find it.
+问：GHC 是如何找到包含模块 (M) 的文件的？
+答：GHC 会去找名为 ``M.hs`` 或 ``M.lhs`` 的文件。所以对大部分模块来说，
+你的模块名需要和文件名保持一致。否则，GHC 就没法找到它。
 
-There is one exception to this general rule: when you load a program
-with :ghci-cmd:`:load`, or specify it when you invoke ``ghci``, you can give a
-filename rather than a module name. This filename is loaded if it
-exists, and it may contain any module you like. This is particularly
-convenient if you have several ``Main`` modules in the same directory
-and you can't call them all ``Main.hs``.
+此通用规则有一个例外：当你通过 :ghci-cmd:`:load` 加载一个程序，或直接在
+启动 ``ghci`` 时就指定一个待加载程序时，你也可以不用模块名，而是直接使用
+文件名。只要这个文件名存在，那无论里面的模块名是什么，都会被加载。这一点
+对于同一文件夹里包含多个 ``Main`` 模块的情况，就会很方便，因为肯定不能把
+这些文件都命名为 ``Main.hs`` 。
 
-The search path for finding source files is specified with the :ghc-flag:`-i`
-option on the GHCi command line, like so:
+可以在 GHCi 命令行中通过 :ghc-flag:`-i` 来指定查找源文件的搜索路径，比如：
 
 .. code-block:: none
 
     ghci -idir1:...:dirn
 
-or it can be set using the :ghci-cmd:`:set` command from within GHCi (see
-:ref:`ghci-cmd-line-options`) [4]_
+也可以在 GHCi 中通过 :ghci-cmd:`:set` 命令来设置 （参见 :ref:`ghci-cmd-line-options` ）[4]_
 
-One consequence of the way that GHCi follows dependencies to find
-modules to load is that every module must have a source file. The only
-exception to the rule is modules that come from a package, including the
-``Prelude`` and standard libraries such as ``IO`` and ``Complex``. If
-you attempt to load a module for which GHCi can't find a source file,
-even if there are object and interface files for the module, you'll get
-an error message.
+GHCi 通过依赖关系来确定要加载的模块，其结果之一就是需要满足一个模块一个文件。
+唯一的例外是来那些自于包 (package) 的模块，其中包括 ``Prelude`` 和一些标准库，
+如比 ``IO`` 和 ``Complex`` 。如果 GHCi 找不到你想要加载的模块的源文件，即使
+存在该模块的目标文件和接口文件，你也会得到一个错误信息，
 
 .. [4]
-   Note that in GHCi, and :ghc-flag:`--make` mode, the :ghc-flag:`-i` option is used to
-   specify the search path for *source* files, whereas in standard
-   batch-compilation mode the :ghc-flag:`-i` option is used to specify the
-   search path for interface files, see :ref:`search-path`.
+   注意，在GHCi 中，如果开启了 :ghc-flag:`--make` 模式，那 :ghc-flag:`-i` 就是
+   用来指定*源*文件的搜索路径的，而在标准的分批编译模式下， :ghc-flag:`-i` 则是
+   用来指定接口文件的搜索路径的，参见 :ref:`search-path` 。
 
 
-Making changes and recompilation
+文件修改与重新编译
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
    single: :reload
 
-If you make some changes to the source code and want GHCi to recompile
-the program, give the :ghci-cmd:`:reload` command. The program will be
-recompiled as necessary, with GHCi doing its best to avoid actually
-recompiling modules if their external dependencies haven't changed. This
-is the same mechanism we use to avoid re-compiling modules in the batch
-compilation setting (see :ref:`recomp`).
+如果你修改了源文件并希望 GHCi 能够重新编译程序，此时就可以使用 :ghci-cmd:`:reload` 命令。
+程序会按需要进行重新编译，而实际上，GHCi 会尽量避免在外部依赖没有变化的情况下重新编译模块。
+在分批编译的模式下，也有同样的机制来避免没有必要的重新编译（参见 :ref:`recomp` ）。
 
 .. _ghci-compiled:
 
-Loading compiled code
+加载已编译代码
 ---------------------
 
 .. index::
-   single: compiled code; in GHCi
+   single: 已编译代码; 在 GHCi 中
 
-When you load a Haskell source module into GHCi, it is normally
-converted to byte-code and run using the interpreter. However,
-interpreted code can also run alongside compiled code in GHCi; indeed,
-normally when GHCi starts, it loads up a compiled copy of the ``base``
-package, which contains the ``Prelude``.
+当你把一个 Haskell 源文件载入 GHCi，它通常会被转成字节码，然后通过解释器运行。
+不过，解释后的代码也可以和编译后的代码一起在 GHCi 中运行；实际一般情况下，
+GHCi 在启动时就会去加载已经编译完了的 ``base`` 包的代码，其中就包含了 ``Prelude`` 。
 
-Why should we want to run compiled code? Well, compiled code is roughly
-10x faster than interpreted code, but takes about 2x longer to produce
-(perhaps longer if optimisation is on). So it pays to compile the parts
-of a program that aren't changing very often, and use the interpreter
-for the code being actively developed.
+那我们有什么理由要去使用编译后的代码呢？原因很简单，编译后的代码，其运行速度大概比
+解释后的代码要快上10倍。不过缺点是编译所消耗的时间大概是解释的2倍（如果开启优化，时间可能更长）。
+所以值得考虑的做法是，编译那些很少会改动的代码，然后用解释器去运行开发中的代码。
 
-When loading up source modules with :ghci-cmd:`:load`, GHCi normally looks for
-any corresponding compiled object files, and will use one in preference
-to interpreting the source if possible. For example, suppose we have a 4-module
-program consisting of modules ``A``, ``B``, ``C``, and ``D``. Modules ``B`` and
-``C`` both import ``D`` only, and ``A`` imports both ``B`` and ``C``:
+当我们通过 :ghci-cmd:`:load` 去加载代码模块时， GHCi 通常会先看一下有没有对应编译后的
+目标文件，如果有就尽量不去解释源文件。举例来说，假设我们有一段程序，包含4个模块，分别是 ``A``、
+``B``、``C`` 和 ``D``。模块 ``B`` 和模块 ``C`` 同时都只引用了模块 ``D`` ，而模块 ``A``
+引用了模块 ``B`` 和模块 ``C`` 。
+
 
 .. code-block:: none
 
@@ -223,7 +196,7 @@ program consisting of modules ``A``, ``B``, ``C``, and ``D``. Modules ``B`` and
          \ /
           D
 
-We can compile ``D``, then load the whole program, like this:
+我们可以先编译 ``D``，然后再加载整个程序，如下：
 
 .. code-block:: none
 
@@ -235,17 +208,14 @@ We can compile ``D``, then load the whole program, like this:
     Ok, modules loaded: A, B, C, D (D.o).
     *Main>
 
-In the messages from the compiler, we see that there is no line for
-``D``. This is because it isn't necessary to compile ``D``, because the
-source and everything it depends on is unchanged since the last
-compilation.
+从编译器给出的信息我们可以看出，这里并没有提到 ``D``。原因是自从上次编译之后，它的源代码及
+它所依赖的代码都没有变化，所以就没有必要再去重新编译 ``D`` 了。
 
-Note the :ghc-flag:`-dynamic` flag to GHC: GHCi uses dynamically-linked object
-code (if you are on a platform that supports it), and so in order to use
-compiled code with GHCi it must be compiled for dynamic linking.
+注意这里的 GHC :ghc-flag:`-dynamic` 开关：GHCi 使用动态链接的目标代码 （如果你所在的系统支持的
+话），所以如果要让 GHCi 使用编译后的代码，就需要开启动态链接的开关来进行编译。
 
-At any time you can use the command :ghci-cmd:`:show modules` to get a list of
-the modules currently loaded into GHCi:
+
+你可以随时使用 :ghci-cmd:`:show modules` 命令来查看当前已加载进 GHCi 的模块：
 
 .. code-block:: none
 
@@ -256,9 +226,8 @@ the modules currently loaded into GHCi:
     A                ( A.hs, interpreted )
     *Main>
 
-If we now modify the source of ``D`` (or pretend to: using the Unix command
-``touch`` on the source file is handy for this), the compiler will no
-longer be able to use the object file, because it might be out of date:
+如果我们现在修改模块 ``D`` 的源代码（也可以用 Unix 命令在源文件上 ``touch`` 一下来方便地
+假装修改），编译器就没办法再去使用那个已过期的目标文件了。
 
 .. code-block:: none
 
@@ -268,12 +237,11 @@ longer be able to use the object file, because it might be out of date:
     Ok, modules loaded: A, B, C, D.
     *Main>
 
-Note that module ``D`` was compiled, but in this instance because its source
-hadn't really changed, its interface remained the same, and the
-recompilation checker determined that ``A``, ``B`` and ``C`` didn't need to be
-recompiled.
+注意，虽然模块 ``D`` 被重新编译了，但 ``touch`` 之后源代码并没有改变，生成的接口文件还
+和之前一样，所以模块 ``A``、模块 ``B``和模块 ``C`` 就不用再重新编译了，这个判断由重新编译的
+检查器来下。
 
-So let's try compiling one of the other modules:
+然后让我们试着挑一个其它模块去编译：
 
 .. code-block:: none
 
@@ -285,10 +253,9 @@ So let's try compiling one of the other modules:
     Compiling A                ( A.hs, interpreted )
     Ok, modules loaded: A, B, C, D.
 
-We didn't get the compiled version of ``C``! What happened? Well, in GHCi a
-compiled module may only depend on other compiled modules, and in this
-case ``C`` depends on ``D``, which doesn't have an object file, so GHCi also
-rejected ``C``\'s object file. Ok, so let's also compile ``D``:
+竟然并没有使用模块 ``C`` 的编译后代码！这是怎么回事？原来在 GHCi 中，一个编译后的模块只能
+依赖于其他编译后的模块，而在我们上面的场景中，模块 ``C`` 依赖于模块 ``D``，但 ``D`` 并没有
+对应的目标文件，所以 GHCi 就顺势不去使用 ``C`` 的目标文件了。好了，那就让我们再来编译 ``D``。
 
 .. code-block:: none
 
@@ -296,8 +263,8 @@ rejected ``C``\'s object file. Ok, so let's also compile ``D``:
     *Main> :reload
     Ok, modules loaded: A, B, C, D.
 
-Nothing happened! Here's another lesson: newly compiled modules aren't
-picked up by :ghci-cmd:`:reload`, only :ghci-cmd:`:load`:
+什么都没发生！这又是另一课：:ghci-cmd:`:reload` 并不会使用新编译出来的模块，只有
+:ghci-cmd:`:load` 会去使用它们：
 
 .. code-block:: none
 
@@ -306,13 +273,10 @@ picked up by :ghci-cmd:`:reload`, only :ghci-cmd:`:load`:
     Compiling A                ( A.hs, interpreted )
     Ok, modules loaded: A, B, C (C.o), D (D.o).
 
-The automatic loading of object files can sometimes lead to confusion,
-because non-exported top-level definitions of a module are only
-available for use in expressions at the prompt when the module is
-interpreted (see :ref:`ghci-scope`). For this reason, you might
-sometimes want to force GHCi to load a module using the interpreter.
-This can be done by prefixing a ``*`` to the module name or filename
-when using :ghci-cmd:`:load`, for example
+目标文件的自动加载，有时候也会造成混乱，这是因为只有在解释一个模块的代码时，我们才能在 GHCi 提
+示符下输入表达式，使用模块中未输出的那部分定义。所以，有时候你可能会希望强制 GHCi 使用解释器去
+加载一个模块。使用 :ghci-cmd:`:load` 加载模块时，在模块名或文件名前加上 ``*`` 前缀就可以
+做到这一点，例如：
 
 .. code-block:: none
 
@@ -320,24 +284,19 @@ when using :ghci-cmd:`:load`, for example
     Compiling A                ( A.hs, interpreted )
     *A>
 
-When the ``*`` is used, GHCi ignores any pre-compiled object code and
-interprets the module. If you have already loaded a number of modules as
-object code and decide that you wanted to interpret one of them, instead
-of re-loading the whole set you can use ``:add *M`` to specify that you
-want ``M`` to be interpreted (note that this might cause other modules
-to be interpreted too, because compiled modules cannot depend on
-interpreted ones).
+用了 ``*`` 之后，GHCi 就会忽略那些预编译的目标代码，并去解释执行这个模块。如果你已经加载了
+一堆模块的目标代码，然后想要去解释执行其中一个模块，你并不用重新加载所有模块，而是可以用
+``:add *M`` 来指定说，我就想解释执行 ``M`` 这一个模块（注意，这一步也可能导致其他模块被解释
+执行，因为编译后的模块不能依赖于解释后的模块）。
 
-To always compile everything to object code and never use the
-interpreter, use the :ghc-flag:`-fobject-code` option (see :ref:`ghci-obj`).
+如果想要把所有东西都编译成目标代码，而不去使用解释器，那就要使用 :ghc-flag:`-fobject-code`
+开关（参见 :ref:`ghci-obj`）。
 
 .. hint::
-    Since GHCi will only use a compiled object file if it can be sure
-    that the compiled version is up-to-date, a good technique when working
-    on a large program is to occasionally run ``ghc --make`` to compile the
-    whole project (say before you go for lunch :-), then continue working in
-    the interpreter. As you modify code, the changed modules will be
-    interpreted, but the rest of the project will remain compiled.
+    只有在 GHCi 确定编译后的版本没有过期时，才会去使用编译后的目标文件。在一个大型程序的开发
+    中，有一个很好的技巧，即时不时地运行 ``ghc --make`` 去编译整个项目（比如在你去吃午饭
+    前），然后接着用解释器去跑你的代码。每次你修改代码，对应的模块就会被解释执行，而项目中
+    的其他模块还是用的编译后代码。
 
 .. _interactive-evaluation:
 
@@ -2517,23 +2476,23 @@ commonly used commands.
 
     Sets the string to be used as the prompt in GHCi. Inside ⟨prompt⟩,
     the next sequences are replaced:
-    
-    - ``%s`` by the names of the modules currently in scope.     
+
+    - ``%s`` by the names of the modules currently in scope.
     - ``%l`` by the line number (as referenced in compiler messages) of the
       current prompt.
     - ``%d`` by the date in "Weekday Month Date" format (e.g., "Tue May 26") .
     - ``%t`` by the current time in 24-hour HH:MM:SS format.
-    - ``%T`` by the current time in 12-hour HH:MM:SS format. 
-    - ``%@`` by the current time in 12-hour am/pm format. 
-    - ``%A`` by the current time in 24-hour HH:MM format. 
-    - ``%u`` by the username of the current user. 
+    - ``%T`` by the current time in 12-hour HH:MM:SS format.
+    - ``%@`` by the current time in 12-hour am/pm format.
+    - ``%A`` by the current time in 24-hour HH:MM format.
+    - ``%u`` by the username of the current user.
     - ``%w`` by the current working directory.
     - ``%o`` by the operating system.
-    - ``%a`` by the machine architecture. 
+    - ``%a`` by the machine architecture.
     - ``%N`` by the compiler name.
     - ``%V`` by the compiler version.
-    - ``%call(cmd [args])`` by the result of calling ``cmd args``.     
-    - ``%%`` by ``%``. 
+    - ``%call(cmd [args])`` by the result of calling ``cmd args``.
+    - ``%%`` by ``%``.
 
     If ⟨prompt⟩ starts with ``"`` then it is parsed as a Haskell String;
     otherwise it is treated as a literal string.
@@ -2548,11 +2507,11 @@ commonly used commands.
     .. index::
        single: GHCi prompt function; setting
 
-    Sets the function to be used for the prompt displaying in GHCi. The 
-    function should be of the type ``[String] -> Int -> IO String``. This 
+    Sets the function to be used for the prompt displaying in GHCi. The
+    function should be of the type ``[String] -> Int -> IO String``. This
     function is called each time the prompt is being made. The first argument
-    stands for the names of the modules currently in scope(the name of the 
-    "topmost" module  will begin with a ``*``; see  :ref:`ghci-scope` for 
+    stands for the names of the modules currently in scope(the name of the
+    "topmost" module  will begin with a ``*``; see  :ref:`ghci-scope` for
     more information). The second arguments is the line number (as referenced
     in compiler  messages) of the current prompt.
 
@@ -2697,7 +2656,7 @@ commonly used commands.
 	*X> :set -fprint-explicit-foralls
 	*X> :type +v length
 	length :: forall (t :: * -> *). Foldable t => forall a. t a -> Int
-    
+
 .. ghci-cmd:: :type +d ⟨expression⟩
 
     Infers and prints the type of ⟨expression⟩, defaulting type variables
@@ -2713,7 +2672,7 @@ commonly used commands.
 
 	*X> :type +d length
 	length :: [a] -> Int
-	      
+
 .. ghci-cmd:: :type-at; ⟨module⟩ ⟨line⟩ ⟨col⟩ ⟨end-line⟩ ⟨end-col⟩ [⟨name⟩]
 
     Reports the inferred type at the given span/position in the module, e.g.:
