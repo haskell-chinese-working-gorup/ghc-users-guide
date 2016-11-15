@@ -1,16 +1,15 @@
 .. _options-sanity:
 
-Warnings and sanity-checking
+警告和 sanity-checking
 ----------------------------
 
 .. index::
    single: sanity-checking options
-   single: warnings
+   single: 警告
 
-GHC has a number of options that select which types of non-fatal error
-messages, otherwise known as warnings, can be generated during
-compilation. By default, you get a standard set of warnings which are
-generally likely to indicate bugs in your program. These are:
+GHC 有许多标志可供你选择在编译过程中生成何种非致命错误信息的类型，
+也就是我们所说的警告信息。默认情况下你会得到一组标准的警告信息，这些
+警告普遍会用来提示你程序中的 bug。如下：
 
 .. hlist::
     :columns: 3
@@ -33,11 +32,11 @@ generally likely to indicate bugs in your program. These are:
     * :ghc-flag:`-Wtabs`
     * :ghc-flag:`-Wunrecognised-warning-flags`
 
-The following flags are simple ways to select standard "packages" of warnings:
+下面的这些标志是选择警告标准“包”的简单途径：
 
 .. ghc-flag:: -W
 
-    Provides the standard warnings plus
+    提供标准的警告以及
 
     .. hlist::
         :columns: 3
@@ -52,8 +51,8 @@ The following flags are simple ways to select standard "packages" of warnings:
 
 .. ghc-flag:: -Wall
 
-    Turns on all warning options that indicate potentially suspicious
-    code. The warnings that are *not* enabled by :ghc-flag:`-Wall` are
+    打开所有警告信息的标志用以指明潜在存疑的代码。
+    那些不是通过 :ghc-flag:`-Wall` 打开的警告有：
 
     .. hlist::
         :columns: 3
@@ -69,12 +68,11 @@ The following flags are simple ways to select standard "packages" of warnings:
 
 .. ghc-flag:: -Wcompat
 
-    Turns on warnings that will be enabled by default in the future, but remain
-    off in normal compilations for the time being. This allows library authors
-    eager to make their code future compatible to adapt to new features before
-    they even generate warnings.
+    开启了那些在将来会是默认开启但是目前在常规编译时仍然保持关闭的警告。这会令库
+    的作者们乐于将他们的代码向后兼容以适配新的语言特性，而即便在此之前这些代码已
+    经产生了警告。
 
-    This currently enables
+    该标志目前开启了
 
     .. hlist::
         :columns: 3
@@ -85,32 +83,30 @@ The following flags are simple ways to select standard "packages" of warnings:
 
 .. ghc-flag:: -Wno-compat
 
-    Disables all warnings enabled by :ghc-flag:`-Wcompat`.
+    关闭所有使用 :ghc-flag:`-Wcompat` 这个标志打开的警告。
 
 .. ghc-flag:: -w
 
-    Turns off all warnings, including the standard ones and those that
-    :ghc-flag:`-Wall` doesn't enable.
+    关闭所有的警告，包括标准的和那些 :ghc-flag:`-Wall` 标志没有开启的。
 
 .. ghc-flag:: -Werror
 
-    Makes any warning into a fatal error. Useful so that you don't miss
-    warnings when doing batch compilation.
+    将所有的警告都看作是一个致命错误。该标志在你进行批量编译过程中不想错过警告
+    信息时会有用处。
 
 .. ghc-flag:: -Wwarn
 
-    Warnings are treated only as warnings, not as errors. This is the
-    default, but can be useful to negate a :ghc-flag:`-Werror` flag.
+    警告仅仅是当作提示，而非错误。默认情况本是如此，但在想对 :ghc-flag:`-Werror` 这一
+    标志进行取反时会有用。
 
-When a warning is emitted, the specific warning flag which controls
-it is shown.
+当发出一个警告时，那个控制该警告的标志也同时会显示。
 
 .. ghc-flag:: -fshow-warning-groups
 
-    When showing which flag controls a warning, also show the
-    respective warning group flag(s) that warning is contained in.
+    当显示一个警告是哪个标志控制的同时，还会显示包含该警告所在的每个
+    警告组的标志。
 
-    This option is off by default.
+    该标志默认是关闭的。
 
 The full set of warning options is described below. To turn off any
 warning, simply give the corresponding ``-Wno-...`` option on the
@@ -120,10 +116,9 @@ of ``-W(no-)*``.
 
 .. ghc-flag:: -Wunrecognised-warning-flags
 
-    Enables warnings when the compiler encounters a ``-W...`` flag that is not
-    recognised.
+    当编译器不能识别某个 ``-W...`` 标志时发出警告。
 
-    This warning is on by default.
+    该标志默认是开启的。
 
 .. ghc-flag:: -Wtyped-holes
 
@@ -131,14 +126,14 @@ of ``-W(no-)*``.
     effect unless typed holes errors are deferred until runtime. See
     :ref:`typed-holes` and :ref:`defer-type-errors`
 
-    This warning is on by default.
+    该标志默认是开启的。
 
 .. ghc-flag:: -Wtype-errors
 
     Causes a warning to be reported when a type error is deferred until
     runtime. See :ref:`defer-type-errors`
 
-    This warning is on by default.
+    该标志默认是开启的。
 
 .. ghc-flag:: -fdefer-type-errors
 
