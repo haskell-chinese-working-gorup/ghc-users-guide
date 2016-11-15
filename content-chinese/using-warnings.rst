@@ -1006,4 +1006,3 @@ If you're feeling really paranoid, the :ghc-flag:`-dcore-lint` option is a good 
 It turns on heavyweight intra-pass sanity-checking within GHC. (It checks GHC's
 sanity, not yours.)
 
---
