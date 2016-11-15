@@ -63,9 +63,14 @@ documentation.
 获得GHC
 -------------
 
+从 `GHC主页<http://www.haskell.org/ghc/>`__ 的"download"链接下载适合你的
+系统的 GHC 发布包。
 Go to the `GHC home page <http://www.haskell.org/ghc/>`__ and follow the
 "download" link to download GHC for your platform.
 
+如果你想自己编译 GHC，请阅读 :ghc-wiki:`GHC Building Guide <Building>` 
+了解如何下载 GHC 源代码及如何在你的系统上编译GHC，值得注意的是，GHC 本身
+是用 Haskell 语言编写的，所以你需要预先安装 GHC 以便编译 GHC 源代码。
 Alternatively, if you want to build GHC yourself, head on over to the
 :ghc-wiki:`GHC Building Guide <Building>` to find out how to get the sources,
 and build it on your system. Note that GHC itself is written in Haskell, so you
@@ -73,61 +78,82 @@ will still need to install GHC in order to build it.
 
 .. _mailing-lists-GHC:
 
-Meta-information: Web sites, mailing lists, etc.
+线上资源：网站，邮件列表，等等。
 ------------------------------------------------
 
 .. index::
    single: mailing lists, Glasgow Haskell
    single: Glasgow Haskell mailing lists
 
+在网络上有以下几个链接你可能会感兴趣：
 On the World-Wide Web, there are several URLs of likely interest:
 
+- `GHC 主页 <http://www.haskell.org/ghc/>`__
 -  `GHC home page <http://www.haskell.org/ghc/>`__
 
+- `GHC 开发者主页 <http://ghc.haskell.org/trac/ghc/>`__ （开发者文档、
+wiki，缺陷追踪）
 -  `GHC Developers Home <http://ghc.haskell.org/trac/ghc/>`__ (developer
    documentation, wiki, and bug tracker)
 
+我们使用下面的邮件列表进行 GHC 相关的讨论，如果你觉得合适，我们鼓励你加
+入进去。
 We run the following mailing lists about GHC. We encourage you to join,
 as you feel is appropriate.
 
 ``glasgow-haskell-users``
+    这个邮件列表用于 GHC 用户之间的通信，如果你有关于 GHC 的问题，请首
+    先查阅 `FAQ <http://wwww.haskell.org/haskellwiki/GHC/FAQ>`__ 。
     This list is for GHC users to chat among themselves. If you have a
     specific question about GHC, please check the
     `FAQ <http://www.haskell.org/haskellwiki/GHC/FAQ>`__ first.
 
+    订阅者能够通过向glasgow-haskell-users@haskell.org发送邮件的方式与该
+    邮件列表内的用户进行交流。更多的信息请参见：
+    `Mailman page <http://www.haskell.org/mailman/listinfo/glasgow-haskell-users>`__ 。
     Subscribers can post to the list by sending their message to 
     glasgow-haskell-users@haskell.org. Further information can be found
     on the
     `Mailman page <http://www.haskell.org/mailman/listinfo/glasgow-haskell-users>`__.
 
 ``ghc-devs``
+    该邮件列表用于 GHC 开发者之间的交流，如果你有使用 GHC API 或者对 GHC 
+    的实现有任何的问题，请随时通过该邮件列表进行讨论。
     The GHC developers hang out here. If you are working with the GHC API
     or have a question about GHC's implementation, feel free to chime in.
 
+    订阅者可以通过向ghc-devs@haskell.org发送邮件的形式与该列表内的人员
+    进行交流。更多的信息请参见：
+    `Mailman page <http://www.haskell.org/mailman/listinfo/ghc-devs>`__ 。
     Subscribers can post to the list by sending their message to 
     ghc-devs@haskell.org. Further information can be found on the
     `Mailman page <http://www.haskell.org/mailman/listinfo/ghc-devs>`__.
 
+``www.haskell.org`` 还有提供一些其它的 Haskell 和 GHC 相关的邮件列表，
+请到 http://www.haskell.org/mailman/listinfo/ 页面查看完整的邮件列表。
 There are several other Haskell and GHC-related mailing lists served by
 ``www.haskell.org``. Go to http://www.haskell.org/mailman/listinfo/
 for the full list.
 
 .. _bug-reporting:
 
-Reporting bugs in GHC
+报告 GHC 中的 bug
 ---------------------
 
 .. index::
    single: bugs; reporting
    single: reporting bugs
 
+GHC 是一个快速进化中的系统，所以 GHC 中一定会藏有 bug，如果您在GHC 中发
+现了一个 bug，请根据 :ghc-wiki:`this wiki page <ReportABug>` 中的信息上
+报该 bug。
 Glasgow Haskell is a changing system so there are sure to be bugs in it.
 If you find one, please see :ghc-wiki:`this wiki page <ReportABug>` for
 information on how to report it.
 
 .. _version-numbering:
 
-GHC version numbering policy
+GHC 版本号编码规则
 ----------------------------
 
 .. index::
