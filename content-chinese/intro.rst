@@ -4,25 +4,25 @@ GHC介绍
 ===================
 
 本文是格拉斯哥大学 Haskell 编译器（GHC）的使用指南，对应的 Haskell 语言
-版本是 `Haskell 2010 <http://www.haskell.org/>`__ ，GHC 同时支持解释执
-行和编译执行两种模式。
+版本是 `Haskell 2010 <http://www.haskell.org/>`__ ，GHC 是一个交互式的
+批编译系统。
 This is a guide to using the Glasgow Haskell Compiler (GHC): an
 interactive and batch compilation system for the
 `Haskell 2010 <http://www.haskell.org/>`__ language.
 
 GHC 由两个主要部分组成：一个是交互式的解译器（GHCi，参见 :ref:`ghci` ）
-另一个是编译器（参见 :ref:`using-ghc` ）。事实上，GHC 是一个单一的完整
-的程序，只是以两种不同的参数运行，以提供解释或者编译功能。
+另一个是批编译器（参见 :ref:`using-ghc` ）。事实上，GHC 是一个单一的的
+程序，只是以两种不同的选项运行，以提供交互功能或批编译功能。
 GHC has two main components: an interactive Haskell interpreter (also
 known as GHCi), described in :ref:`ghci`, and a batch compiler,
 described throughout :ref:`using-ghc`. In fact, GHC consists of a single
 program which is just run with different options to provide either the
 interactive or the batch system.
 
-编译器可以与 GHCi 一起使用：编译过的模块能够被加载到解释器中并与解释的代
-码一起使用，事实上当你使用 GHCi 时，大部分的库都将被预编译。这意味着你可
-以同时享受预编译的代码所带来的执行速度上的提升及开发过程中快速编译代码所
-带来的便利。
+批编译器可以与 GHCi 一起使用：编译过的模块能够被加载到交互环境中并能够像
+解释的代码那样被使用，事实上当你使用 GHCi 时，大部分的库都将被预编译，这
+意味着你可以同时享受预编译的代码带来的执行速度上的提升及开发过程中快速编
+译所写代码而带来的便利性。
 The batch compiler can be used alongside GHCi: compiled modules can be
 loaded into an interactive session and used in the same way as
 interpreted code, and in fact when using GHCi most of the library code
@@ -40,8 +40,8 @@ explicit unboxed types. These are all described in
 :ref:`ghc-language-features`.
 
 GHC 提供了全面的优化措施可供选择，所以当你真的使用了这些优化措施时，GHC
-能够生产出相当快的代码。GHC 默认选择以最快的速度编译代码，而不是对生成
-的代码做太多的优化。（todo）
+能够生产出执行速度相当快的代码。GHC 默认选择以最快的速度编译代码，而不是
+对生成的代码做太多的优化。（todo）
 GHC has a comprehensive optimiser, so when you want to Really Go For It
 (and you've got time to spare) GHC can produce pretty fast code.
 Alternatively, the default option is to compile as fast as possible
@@ -54,13 +54,13 @@ GHC's profiling system supports "cost centre stacks": a way of seeing
 the profile of a Haskell program in a call-graph like structure. See
 :ref:`profiling` for more details.
 
-GHC 提供了许多核心库，将在以后的章节中分别介绍。
+GHC 同时提供了许多库，它们将在以后的章节中分别进行介绍。
 GHC comes with a number of libraries. These are described in separate
 documentation.
 
 .. _getting:
 
-Obtaining GHC
+获得GHC
 -------------
 
 Go to the `GHC home page <http://www.haskell.org/ghc/>`__ and follow the
