@@ -144,7 +144,7 @@ for the full list.
    single: bugs; reporting
    single: reporting bugs
 
-GHC 是一个快速进化中的系统，所以 GHC 中一定会藏有 bug，如果您在GHC 中发
+GHC 是一个快速开发中的系统，所以 GHC 中一定会藏有 bug，如果您在GHC 中发
 现了一个 bug，请根据 :ghc-wiki:`this wiki page <ReportABug>` 中的信息上
 报该 bug。
 Glasgow Haskell is a changing system so there are sure to be bugs in it.
@@ -159,9 +159,15 @@ GHC 版本号编码规则
 .. index::
    single: version, of ghc
 
+以 GHC 6.8 版为例，我们使用了以下的版本号编码规则：
 As of GHC version 6.8, we have adopted the following policy for
 numbering GHC versions:
 
+    稳定的分支以 ``x.y`` 的形式命名，其中 y 是偶数。在稳定的 ``x.y`` 分
+    支上进行的发布以 ``x.y.z`` 的形式对其版本号进行命名，其中 z 是次要
+    版本号，并且 z >= 1。次要版本号只用于 bug 修复，并不改变任务系统级
+    的程序接口。然尔，如果你在旧版的 GHC 上安装了新的 bug 修复版，那么
+    你需要重新编译那些使用旧版的库编译的代码。
     Stable branches are numbered ``x.y``, where ⟨y⟩ is *even*. Releases
     on the stable branch ``x.y`` are numbered ``x.y.z``, where ⟨z⟩ (>=
     1) is the patchlevel number. Patchlevels are bug-fix releases only,
@@ -170,6 +176,10 @@ numbering GHC versions:
     will need to recompile any code that was compiled against the old
     libraries.
 
+    以一个主要发布版的版本号 ``x.y.z`` 为例， ``__GLASGOW_HASKELL__`` 
+    （参见 :ref:`c-pre-processor` ）是一个 xy 形式的整数（如果 y
+    只有一位数字，则将在 y 的前面插入一个 0 ，以 GHC 的 6.8.2 版为例
+    你将会得到 ``__GLASGOW_HASKELL__==608`` ）。
     The value of ``__GLASGOW_HASKELL__`` (see :ref:`c-pre-processor`)
     for a major release ``x.y.z`` is the integer ⟨xyy⟩ (if ⟨y⟩ is a
     single digit, then a leading zero is added, so for example in
