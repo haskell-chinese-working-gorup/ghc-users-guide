@@ -34,7 +34,7 @@ export LC_ALL=en_US.UTF-8
 + intro                 0%  @Balter Notz
 + 8.2.1-notes           0%  @Balter Notz 
 + ghci                  25%  @kdepp       -- THIS IS A HARD ONE!
-+ runghc                0%  @Bo Yang 
++ runghc                100%  @Bo Yang
 + usage                 0% 
     + using                    0% @Bo Yang
     + using-warnings           0% @B1nj0y
