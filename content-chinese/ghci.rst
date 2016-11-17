@@ -300,11 +300,10 @@ GHCi 在启动时就会去加载已经编译完了的 ``base`` 包的代码，�
 
 .. _interactive-evaluation:
 
-Interactive evaluation at the prompt
+提示符下的交互式求值计算
 ------------------------------------
 
-When you type an expression at the prompt, GHCi immediately evaluates
-and prints the result:
+每次我们在提示符下输入一个表达式，GHCi 就会立即对其进行求值计算，并把结果打印出来：
 
 .. code-block:: none
 
@@ -315,12 +314,11 @@ and prints the result:
 
 .. _actions-at-prompt:
 
-I/O actions at the prompt
+提示符下的 I/O 操作
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GHCi does more than simple expression evaluation at the prompt. If you
-enter an expression of type ``IO a`` for some ``a``, then GHCi
-*executes* it as an IO-computation.
+GHCi 能做的还不仅仅时简单的表达式计算。如果你输入一个 ``IO a`` 类型的表达式，其中 ``a`` 是
+一个确定的类型，那 GHCi 就会把它当作 IO 操作来*执行*。
 
 .. code-block:: none
 
@@ -329,22 +327,20 @@ enter an expression of type ``IO a`` for some ``a``, then GHCi
     Prelude> putStrLn "hello"
     hello
 
-This works even if the type of the expression is more general, provided
-it can be *instantiated* to ``IO a``. For example
+不仅如此，即使表达式是个泛型，只要它可以被*实例化*为 ``IO a`` 类型，就也能被正确计算，比如：
 
 .. code-block:: none
 
     Prelude> return True
     True
 
-Furthermore, GHCi will print the result of the I/O action if (and only
-if):
+此外，当且仅当满足以下条件时，GHCi 会将 I/O 操作的结果打印出来：
 
--  The result type is an instance of ``Show``.
+-  结果的类型是 ``Show`` 的实例。
 
--  The result type is not ``()``.
+-  结果的类型不是 ``()``。
 
-For example, remembering that ``putStrLn :: String -> IO ()``:
+举例来说，我们可以回忆一下 ``putStrLn :: String -> IO ()`` ：
 
 .. code-block:: none
 
@@ -357,20 +353,18 @@ For example, remembering that ``putStrLn :: String -> IO ()``:
 .. _ghci-stmts:
 
 Using ``do`` notation at the prompt
+在提示符下使用 ``do`` 语法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
-   single: do-notation; in GHCi
-   single: statements; in GHCi
+   single: do 语法; 在 GHCi 中
+   single: 语句; 在 GHCi 中
 
-GHCi actually accepts statements rather than just expressions at the
-prompt. This means you can bind values and functions to names, and use
-them in future expressions or statements.
+在 GHCi 提示符下，我们不仅可以输入表达式，还可以输入语句。也就是说，你可以将值和函数绑定到
+名字上，以便后续在表达式或其他语句中使用。
 
-The syntax of a statement accepted at the GHCi prompt is exactly the
-same as the syntax of a statement in a Haskell ``do`` expression.
-However, there's no monad overloading here: statements typed at the
-prompt must be in the ``IO`` monad.
+在 GHCi 提示符下，语句的语法和 do 表达式中语句的语法完全一样。不过，这里不存在 Monad 重载，
+也就是说，输入的语句的所在环境只能是 ``IO`` Monad。
 
 .. code-block:: none
 
@@ -379,23 +373,20 @@ prompt must be in the ``IO`` monad.
     42
     Prelude>
 
-The statement ``x <- return 42`` means “execute ``return 42`` in the
-``IO`` monad, and bind the result to ``x``\ ”. We can then use ``x`` in
-future statements, for example to print it as we did above.
+语句 ``x <- return 42`` 表示"在 ``IO`` monad 中执行 ``return 42``，并把结果绑定到
+``x`` 上"。然后我们就可以在后续的语句中使用 ``x`` 了，比如在上面的代码中我们可以把它打印出来。
 
 .. ghc-flag:: -fprint-bind-result
 
-    If :ghc-flag:`-fprint-bind-result` is set then GHCi will print the result of a
-    statement if and only if:
+    如果开启 :ghc-flag:`-fprint-bind-result`，则当且仅当满足以下条件，GHCi 才会打印出
+    一个语句的结果：
 
-    - The statement is not a binding, or it is a monadic binding
-      (``p <- e``) that binds exactly one variable.
+    - 该语句不是一个绑定，除非它是只绑定一个变量的 monad 式绑定 (``p <- e``)。
 
-    - The variable's type is not polymorphic, is not ``()``, and is an
-      instance of ``Show``.
+    - 绑定变量的类型既不是多态的，也不是 ``()``，完了还得是 ``Show`` 的实例。
 
-Of course, you can also bind normal non-IO expressions using the
-``let``\-statement:
+
+当然了，你也可以使用 ``let`` 来绑定常规的非 IO 表达式：
 
 .. code-block:: none
 
@@ -404,9 +395,8 @@ Of course, you can also bind normal non-IO expressions using the
     42
     Prelude>
 
-Another important difference between the two types of binding is that
-the monadic bind (``p <- e``) is *strict* (it evaluates ``e``), whereas
-with the ``let`` form, the expression isn't evaluated immediately:
+以上两类绑定之间另一个重要的区别在于，monad 式绑定 (``p <- e``) 是严格的 (即 ``e`` 会直接被
+求值)，而对于 ``let`` 形式的绑定，表达式并不会被立即求值计算：
 
 .. code-block:: none
 
@@ -415,10 +405,9 @@ with the ``let`` form, the expression isn't evaluated immediately:
     *** Exception: help!
     Prelude>
 
-Note that ``let`` bindings do not automatically print the value bound,
-unlike monadic bindings.
+注意，``let`` 形式的绑定并不会自动打印所绑定的值，这一点与 ``monad`` 式的绑定不同。
 
-You can also define functions at the prompt:
+你也可以在提示符下定义函数：
 
 .. code-block:: none
 
@@ -427,10 +416,8 @@ You can also define functions at the prompt:
     3
     Prelude>
 
-However, this quickly gets tedious when defining functions with multiple
-clauses, or groups of mutually recursive functions, because the complete
-definition has to be given on a single line, using explicit semicolons
-instead of layout:
+不过，一旦要开始写多子句的函数，或者几个相互递归调用的函数时，事情就会开始变得有些麻烦，你就必须
+用分号来分隔语句，这是因为我们必须在一行内提供完整的函数定义。
 
 .. code-block:: none
 
@@ -439,9 +426,8 @@ instead of layout:
     6
     Prelude>
 
-To alleviate this issue, GHCi commands can be split over multiple lines,
-by wrapping them in ``:{`` and ``:}`` (each on a single line of its
-own):
+当然你也可以不用上面这种蛋疼的写法，我们也可以把一堆 GHCi 命令包在 ``:{`` 与 ``:}`` 中，
+这样，这些命令就可以写成多行的形式了 (``:{`` 与 ``:}`` 必须单独各占一行)。
 
 .. code-block:: none
 
@@ -452,28 +438,23 @@ own):
     Prelude> g (*) 1 [1..3]
     6
 
-Such multiline commands can be used with any GHCi command, and note that
-the layout rule is in effect. The main purpose of multiline commands is
-not to replace module loading but to make definitions in .ghci-files
-(see :ref:`ghci-dot-files`) more readable and maintainable.
+任何 GHCi 命令都可以被用在多行形式中，值得注意的是，在多行命令中要遵守排版规则。提供多行命令
+的目的，并不是要代替模块加载，而是要让 .ghci 文件 (参见：:ref:`ghci-dot-files`) 中的定义
+更加可读和可维护。
 
-Any exceptions raised during the evaluation or execution of the
-statement are caught and printed by the GHCi command line interface (for
-more information on exceptions, see the module ``Control.Exception`` in
-the libraries :base-ref:`documentation <Control-Exception.html>`).
+GHCi 会捕获并打印出在语句求值和执行过程中产生的任何异常 (更多关于异常的内容，参见
+:base-ref:`documentation <Control-Exception.html>` 库中的 ``Control.Exception``
+模块)。
 
-Every new binding shadows any existing bindings of the same name,
-including entities that are in scope in the current module context.
+新的绑定会覆盖之前同名的绑定，其中也包括在当前加载的模块中定义的内容。
 
 .. warning::
-    Temporary bindings introduced at the prompt only last until the
-    next :ghci-cmd:`:load` or :ghci-cmd:`:reload` command, at which time they
-    will be simply lost. However, they do survive a change of context with
-    :ghci-cmd:`:module`: the temporary bindings just move to the new location.
+    提示符下定义的临时绑定，在下次执行 :ghci-cmd:`:load` 或 :ghci-cmd:`:reload` 命令
+    时就会失效。不过，当我们使用 :ghci-cmd:`:module`: 切换模块环境时，临时绑定会迁移到新的
+    环境中继续生效。
 
 .. hint::
-    To get a list of the bindings currently in scope, use the
-    :ghci-cmd:`:show bindings` command:
+    可以使用 :ghci-cmd:`:show bindings` 命令来查看当前环境下的所有绑定。
 
     .. code-block:: none
 
@@ -482,8 +463,7 @@ including entities that are in scope in the current module context.
         Prelude>
 
 .. hint::
-    If you turn on the ``+t`` option, GHCi will show the type of each
-    variable bound by a statement. For example:
+    如果你开启 ``+t`` 选项，GHCi 会在产生绑定的语句后打印出每一个变量的类型。例如：
 
     .. code-block:: none
 
@@ -498,14 +478,12 @@ including entities that are in scope in the current module context.
 
 .. _ghci-multiline:
 
-Multiline input
+多行输入
 ~~~~~~~~~~~~~~~
 
-Apart from the ``:{ ... :}`` syntax for multi-line input mentioned
-above, GHCi also has a multiline mode, enabled by ``:set +m``,
-``:set +m`` in which GHCi detects automatically when the current
-statement is unfinished and allows further lines to be added. A
-multi-line input is terminated with an empty line. For example:
+对于多行输入，除了上面提到的 ``:{ ... :}`` 语法外，GHCi 还提供了一种多行模式，通过
+``:set +m`` 即可以开启这一模式。启用 ``:set +m`` 后，GHCi 会自动判断当前语句是否还未
+结束，并允许在下一行中继续输入。整个语句的结束，是通过一个空行来标识的。例如：
 
 .. code-block:: none
 
@@ -513,10 +491,9 @@ multi-line input is terminated with an empty line. For example:
     Prelude> let x = 42
     Prelude|
 
-Further bindings can be added to this ``let`` statement, so GHCi
-indicates that the next line continues the previous one by changing the
-prompt. Note that layout is in effect, so to add more bindings to this
-``let`` we have to line them up:
+我们还可以在整个 ``let`` 语句里，加入更多的绑定，所以 GHCi 在这里把提示符换成了竖线，用来
+表示下一行输入将延续上面的语句。注意，在多行模式中，排版规则依然生效，所以我们需要给后续输入的
+绑定增加缩进。
 
 .. code-block:: none
 
@@ -526,7 +503,7 @@ prompt. Note that layout is in effect, so to add more bindings to this
     Prelude|
     Prelude>
 
-Explicit braces and semicolons can be used instead of layout:
+如果不想使用缩进排版，也可以使用大括号和分号：
 
 .. code-block:: none
 
@@ -538,10 +515,9 @@ Explicit braces and semicolons can be used instead of layout:
     world
     Prelude>
 
-Note that after the closing brace, GHCi knows that the current statement
-is finished, so no empty line is required.
+注意，输入完闭合的大括号，GHCi 就知道了当前语句已经结束，此时就不再需要空行结尾了。
 
-Multiline mode is useful when entering monadic ``do`` statements:
+在输入 monad 式 ``do`` 语句时，多行模式还是很有用的：
 
 .. code-block:: none
 
@@ -555,8 +531,7 @@ Multiline mode is useful when entering monadic ``do`` statements:
     0
     Control.Monad.State>
 
-During a multiline interaction, the user can interrupt and return to the
-top-level prompt.
+在多行模式的输入中，用户也可以打断多行模式，回到顶层的提示符。
 
 .. code-block:: none
 
@@ -567,12 +542,12 @@ top-level prompt.
 
 .. _ghci-decls:
 
-Type, class and other declarations
+类型，类型类以及其他声明
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-At the GHCi prompt you can also enter any top-level Haskell declaration,
-including ``data``, ``type``, ``newtype``, ``class``, ``instance``,
-``deriving``, and ``foreign`` declarations. For example:
+在 GHCi 提示符下，你可以输入任何顶层的 Haskell 声明，其中包括 ``data``、``type``、
+``newtype``、``class``、``instance``、``deriving`` 以及 ``foreign`` 声明。例如：
+
 
 .. code-block:: none
 
@@ -586,14 +561,11 @@ including ``data``, ``type``, ``newtype``, ``class``, ``instance``,
     instance Ord T -- Defined at <interactive>:2:34
     instance Show T -- Defined at <interactive>:2:39
 
-As with ordinary variable bindings, later definitions shadow earlier
-ones, so you can re-enter a declaration to fix a problem with it or
-extend it. But there's a gotcha: when a new type declaration shadows an
-older one, there might be other declarations that refer to the old type.
-The thing to remember is that the old type still exists, and these other
-declarations still refer to the old type. However, while the old and the
-new type have the same name, GHCi will treat them as distinct. For
-example:
+对于普通的变量绑定，后面的定义会覆盖之前的定义，这让我们可以不断重复输入它的新定义，来修复
+任何问题或者是做进一步的扩展。但对于一个类型，当我们输入一个新定义时，问题就来了。我们也
+可以试图用新的类型定义来覆盖老的定义，不过问题是，如果之前存在其他函数或类型的定义使用到了
+这个老的定义，在新定义生效后，它们仍将使用老的定义。虽然新老定义的名字相同，但 GHCi 却
+认为它们是不同的。例如：
 
 .. code-block:: none
 
@@ -610,15 +582,13 @@ example:
         In an equation for `it': it = f A
     Prelude>
 
-The old, shadowed, version of ``T`` is displayed as
-``main::Interactive.T`` by GHCi in an attempt to distinguish it from the
-new ``T``, which is displayed as simply ``T``.
+在这里，GHCi 用 ``main::Interactive.T`` 来表示那个被覆盖了的上一个版本的 ``T``，这样就
+可以和新的 ``T`` 区分开。而新的 ``T`` 就可以直接表示为 ``T``。
 
-Class and type-family instance declarations are simply added to the list
-of available instances, with one exception. Since you might want to
-re-define one, a class or type-family instance *replaces* any earlier
-instance with an identical head or left hand side (respectively). (See
-:ref:`type-families`.)
+类型类 (class) 和类型族 (type-family) 的实例声明会被简单地加入可用实例列表中。不过有一个
+例外，一个类型类或类型族的新实例，会把之前定义过的和它类型相同的实例给替换掉 (参见：
+:ref:`type-families`)。
+
 
 .. _ghci-scope:
 
