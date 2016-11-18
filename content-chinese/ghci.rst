@@ -669,15 +669,13 @@ GHCi 会捕获并打印出在语句求值和执行过程中产生的任何异常
 
 .. _ghci-import-decl:
 
-Controlling what is in scope with ``import``
+通过 ``import`` 来控制作用域中的内容
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We are not limited to a single module: GHCi can combine scopes from
-multiple modules, in any mixture of ``*`` and non-\ ``*`` forms. GHCi
-combines the scopes from all of these modules to form the scope that is
-in effect at the prompt.
+我们并非只能载入一个模块，GHCi 可以合并多个模块的作用域，无论它们各自是否以 ``*`` 形式载入。
+GHCi 会合并这些模块的作用域，作为提示符下真正的作用域。
 
-To add modules to the scope, use ordinary Haskell ``import`` syntax:
+可以使用常规的 Haskell ``import`` 语法来把模块加载进当前作用域。
 
 .. code-block:: none
 
@@ -686,10 +684,9 @@ To add modules to the scope, use ordinary Haskell ``import`` syntax:
     hello
     Prelude System.IO>
 
-The full Haskell import syntax is supported, including ``hiding`` and
-``as`` clauses. The prompt shows the modules that are currently
-imported, but it omits details about ``hiding``, ``as``, and so on. To
-see the full story, use :ghci-cmd:`:show imports`:
+这里支持 Haskell 的 import 的全部语法，包括 ``hiding`` 和 ``as`` 子句。提示符会显示当前
+被加载的模块，但不会显示 ``hiding`` 和 ``as`` 的细节。想要看完整细节，可以使用
+:ghci-cmd:`:show imports` 命令。
 
 .. code-block:: none
 
@@ -701,14 +698,12 @@ see the full story, use :ghci-cmd:`:show imports`:
     import Data.Map as Map
     Prelude System.IO Map>
 
-Note that the ``Prelude`` import is marked as implicit. It can be
-overridden with an explicit ``Prelude`` import, just like in a Haskell
-module.
+注意，这里 ``Prelude`` 的载入被标为隐式 (implicit)，你也可以显示地载入 ``Prelude`` 来
+覆盖它。这一点和在普通 Haskell 模块中一样。
 
-With multiple modules in scope, especially multiple ``*``-form modules,
-it is likely that name clashes will occur. Haskell specifies that name
-clashes are only reported when an ambiguous identifier is used, and GHCi
-behaves in the same way for expressions typed at the prompt.
+当作用域中有多个被载入的模块，尤其是当这些模块又都是使用 ``*`` 形式载入的，这时就很有可能产生
+命名冲突。在 Haskell 中，只用在使用到这些有歧义的标识符时，才会报命名冲突。在这一点上 GHCi
+也是这么做的。 
 
 .. _ghci-module-cmd:
 
