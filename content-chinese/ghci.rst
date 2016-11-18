@@ -592,47 +592,42 @@ GHCi 会捕获并打印出在语句求值和执行过程中产生的任何异常
 
 .. _ghci-scope:
 
-What's really in scope at the prompt?
+提示符当前作用域下到底有些什么？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you type an expression at the prompt, what identifiers and types
-are in scope? GHCi provides a flexible way to control exactly how the
-context for an expression is constructed:
+当你在提示符下输入一个表达式，当前作用域下究竟存在哪些类型和标识符？GHCi 提供了非常灵活的方式
+来准确控制一个表达式的上下文环境该如何构建：
 
--  The :ghci-cmd:`:load`, :ghci-cmd:`:add`, and :ghci-cmd:`:reload` commands
-   (:ref:`ghci-load-scope`).
+-  :ghci-cmd:`:load`、 :ghci-cmd:`:add` 以及 :ghci-cmd:`:reload` 命令 (参见
+    :ref:`ghci-load-scope`)。
 
--  The ``import`` declaration (:ref:`ghci-import-decl`).
+-  ``import`` 声明 (参见 :ref:`ghci-import-decl`)。
 
--  The :ghci-cmd:`:module` command (:ref:`ghci-module-cmd`).
+-  :ghci-cmd:`:module` 命令 (参见 :ref:`ghci-module-cmd`)。
 
-The command :ghci-cmd:`:show imports` will show a summary of which modules
-contribute to the top-level scope.
+可以使用 :ghci-cmd:`:show imports` 命令来查看，顶层作用域中都有哪些模块。
 
 .. hint::
-    GHCi will tab-complete names that are in scope; for example, if
-    you run GHCi and type ``J<tab>`` then GHCi will expand it to
-    ``Just``.
+    GHCi 允许使用 tab 来补全作用域中的名字；例如，如果你在 GHCi 中输入 ``J<tab>``，
+    GHCi 会将其展开为 ``Just``。
 
 .. _ghci-load-scope:
 
-The effect of ``:load`` on what is in scope
+``:load`` 对作用域的影响
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ghci-cmd:`:load`, :ghci-cmd:`:add`, and :ghci-cmd:`:reload` commands
-(:ref:`loading-source-files` and :ref:`ghci-compiled`) affect the
-top-level scope. Let's start with the simple cases; when you start GHCi
-the prompt looks like this:
+:ghci-cmd:`:load`、 :ghci-cmd:`:add` 以及 :ghci-cmd:`:reload` 命令
+(参见 :ref:`loading-source-files` 以及 :ref:`ghci-compiled`) 都会对顶层作用域
+产生影响。让我们从一些简单地情况入手；当你启动 GHCi 时，提示符是这样的：
 
 .. code-block:: none
 
     Prelude>
 
-which indicates that everything from the module ``Prelude`` is currently
-in scope; the visible identifiers are exactly those that would be
-visible in a Haskell source file with no ``import`` declarations.
+这表示 ``Prelude`` 模块中的所有内容正存在于当前作用域；而这些可见的标识符，恰好等同于没有
+任何 ``import`` 声明的 Haskell 源文件中的情况。
 
-If we now load a file into GHCi, the prompt will change:
+如果此时我们将一个文件载入 GHCi，提示符就会变为：
 
 .. code-block:: none
 
@@ -640,32 +635,24 @@ If we now load a file into GHCi, the prompt will change:
     Compiling Main             ( Main.hs, interpreted )
     *Main>
 
-The new prompt is ``*Main``, which indicates that we are typing
-expressions in the context of the top-level of the ``Main`` module.
-Everything that is in scope at the top-level in the module ``Main`` we
-just loaded is also in scope at the prompt (probably including
-``Prelude``, as long as ``Main`` doesn't explicitly hide it).
+提示符变成了 ``*Main``，这表示后续输入的表达式将在 ``Main`` 模块的顶层上下文环境中进行
+求值计算。``Main`` 模块的顶层作用域下的所有内容都会被载入当前提示符作用域 (只要 ``Main``
+没有隐藏 ``Prelude``，``Prelude`` 的内容也会存在)。
 
-The syntax in the prompt ``*module`` indicates that it is the full
-top-level scope of ⟨module⟩ that is contributing to the scope for
-expressions typed at the prompt. Without the ``*``, just the exports of
-the module are visible.
+提示符中类似 ``*module`` 的字样，表示此模块的顶层作用域，即为当前提示符作用域中的全部内容。
+如果此处没有那个 ``*``，则表示只有该模块的输出内容才是可见的。
 
 .. note::
-    For technical reasons, GHCi can only support the ``*``-form for
-    modules that are interpreted. Compiled modules and package modules can
-    only contribute their exports to the current scope. To ensure that GHCi
-    loads the interpreted version of a module, add the ``*`` when loading
-    the module, e.g. ``:load *M``.
+    由于技术原因，GHCi 在解释的方式去载入模块时，只支持带 ``*`` 的形式。而编译后的模块和包
+    则只支持载入输出项。如果希望 GHCi 去解释一个模块，可以在加载模块时加上 ``*``，
+    例如 ``:load *M``。
 
-In general, after a :ghci-cmd:`:load` command, an automatic import is added to
-the scope for the most recently loaded "target" module, in a ``*``-form
-if possible. For example, if you say ``:load foo.hs bar.hs`` and
-``bar.hs`` contains module ``Bar``, then the scope will be set to
-``*Bar`` if ``Bar`` is interpreted, or if ``Bar`` is compiled it will be
-set to ``Prelude Bar`` (GHCi automatically adds ``Prelude`` if it isn't
-present and there aren't any ``*``-form modules). These
-automatically-added imports can be seen with :ghci-cmd:`:show imports`:
+通常在使用 :ghci-cmd:`:load` 命令时，会将最后一个加载的模块自动载入当前作用域，并尽量使用
+``*`` 形式。例如，如果输入 ``:load foo.hs bar.hs`` 且 ``bar.hs`` 包含 ``Bar`` 模块，
+则如果 ``Bar`` 是被解释后载入的，当前作用域将设置为 ``*Bar``，如果载入的是
+编译后的 ``Bar``，则会设置为 ``Prelude Bar`` （如果没有任何 ``*`` 形式的模块，且没有显示
+地载入 ``Prelude``, GHCi 就会自动加上 ``Prelude`` )。使用 :ghci-cmd:`:show imports`:
+可以查看这些被自动载入的模块。
 
 .. code-block:: none
 
@@ -676,9 +663,9 @@ automatically-added imports can be seen with :ghci-cmd:`:show imports`:
     :module +*Main -- added automatically
     *Main>
 
-and the automatically-added import is replaced the next time you use
-:ghci-cmd:`:load`, :ghci-cmd:`:add`, or :ghci-cmd:`:reload`. It can also be
-removed by :ghci-cmd:`:module` as with normal imports.
+下次你再使用 :ghci-cmd:`:load`、 :ghci-cmd:`:add` 以及 :ghci-cmd:`:reload` 命令，
+这些自动载入的模块又会被替换掉。也可以像对常规载入一样，使用 :ghci-cmd:`:module` 命令来
+移除已载入的模块。
 
 .. _ghci-import-decl:
 
