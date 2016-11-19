@@ -731,13 +731,11 @@ GHCi 会合并这些模块的作用域，作为提示符下真正的作用域。
 
 .. _ghci-import-qualified:
 
-Qualified names
+Qualified 名字
 ^^^^^^^^^^^^^^^
 
-To make life slightly easier, the GHCi prompt also behaves as if there
-is an implicit ``import qualified`` declaration for every module in
-every package, and every module currently loaded into GHCi. This
-behaviour can be disabled with the ``-fno-implicit-import-qualified`` flag.
+为了减少麻烦，GHCi 在载入任何模块时，都仿佛是在使用了一个隐式的 ``import qualified``。
+你也可以通过 ``-fno-implicit-import-qualified`` 开关来关闭这个功能。
 
 .. index::
    single: -fno-implicit-import-qualified
