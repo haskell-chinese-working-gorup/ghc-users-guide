@@ -703,35 +703,31 @@ GHCi 会合并这些模块的作用域，作为提示符下真正的作用域。
 
 当作用域中有多个被载入的模块，尤其是当这些模块又都是使用 ``*`` 形式载入的，这时就很有可能产生
 命名冲突。在 Haskell 中，只用在使用到这些有歧义的标识符时，才会报命名冲突。在这一点上 GHCi
-也是这么做的。 
+也是这么做的。
 
 .. _ghci-module-cmd:
 
-Controlling what is in scope with the ``:module`` command
+通过 ``:module`` 命令来控制作用域中的内容
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Another way to manipulate the scope is to use the :ghci-cmd:`:module`
-command, whose syntax is this:
+另外一个操控作用域的方法是使用 :ghci-cmd:`:module` 命令，其语法如下：
 
 .. code-block:: none
 
     :module +|- *mod1 ... *modn
 
-Using the ``+`` form of the ``module`` commands adds modules to the
-current scope, and ``-`` removes them. Without either ``+`` or ``-``,
-the current scope is replaced by the set of modules specified. Note that
-if you use this form and leave out ``Prelude``, an implicit ``Prelude``
-import will be added automatically.
+在 ``module`` 命令中，可以使用 ``+`` 来把模块增加进当前作用域，使用 ``-`` 来把模块从
+当前作用域中移除。如果不加 ``+`` 和 ``-``，则当前作用域将替换为命令中指定的那些模块。
+注意，如果你使用此方法替换模块且其中没有包含 ``Prelude``，GHCi 会自动隐式载入 ``Prelude``。
 
-The :ghci-cmd:`:module` command provides a way to do two things that cannot be
-done with ordinary ``import`` declarations:
+:ghci-cmd:`:module` 有两件事情是 ``import`` 做不到的：
 
--  :ghci-cmd:`:module` supports the ``*`` modifier on modules, which opens the
-   full top-level scope of a module, rather than just its exports.
+-  :ghci-cmd:`:module` 支持 ``*`` 修饰符，可以载入模块顶层作用域中的内容，而非仅仅载入
+   其输出项。
 
--  Imports can be *removed* from the context, using the syntax
-   ``:module -M``. The ``import`` syntax is cumulative (as in a Haskell
-   module), so this is the only way to subtract from the scope.
+-  使用 ``:module -M`` 可以移除 ``import`` 的模块。由于 ``import`` 命令和在 Haskell
+   模块中一样是累加型的导入，没有替换或删除的功能，所以这就成了唯一能移除 ``import`` 导入的
+   模块的方法。
 
 .. _ghci-import-qualified:
 
