@@ -740,29 +740,25 @@ Qualified 名字
 .. index::
    single: -fno-implicit-import-qualified
 
-``:module`` and ``:load``
+``:module`` 与 ``:load``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It might seem that :ghci-cmd:`:module`/``import`` and
-:ghci-cmd:`:load`/:ghci-cmd:`:add`/:ghci-cmd:`:reload` do similar things: you
-can use both to bring a module into scope. However, there is a very important
-difference. GHCi is concerned with two sets of modules:
+看上去好像 :ghci-cmd:`:module`/``import`` 和
+:ghci-cmd:`:load`/:ghci-cmd:`:add`/:ghci-cmd:`:reload` 做的事情很相似：两种方式
+都可以让你把模块载入作用域。但是其中有一个非常重要的区别。在 GHCi 中有两个集合的模块：
 
--  The set of modules that are currently *loaded*. This set is modified
-   by :ghci-cmd:`:load`, :ghci-cmd:`:add` and :ghci-cmd:`:reload`, and can be shown with
-   :ghci-cmd:`:show modules`.
+-  一个集合的模块是当前*被载入的*。:ghci-cmd:`:load`、:ghci-cmd:`:add` 和
+   :ghci-cmd:`:reload` 修改的就是这一集合，并可以通过 :ghci-cmd:`:show modules`
+   来查看。
 
--  The set of modules that are currently *in scope* at the prompt. This set is
-   modified by ``import`` and :ghci-cmd:`:module`, and it is also modified
-   automatically after :ghci-cmd:`:load`, :ghci-cmd:`:add`, and
-   :ghci-cmd:`:reload`, as described above. The set of modules in scope can be
-   shown with :ghci-cmd:`:show imports`.
+-  另一个集合的模块是当前提示符*作用域中的*。``import`` 和 :ghci-cmd:`:module` 修改的就是
+   这一集合，而在执行 :ghci-cmd:`:load`、:ghci-cmd:`:add` 和 :ghci-cmd:`:reload`
+   之后也会自动修改这一集合。可以通过 :ghci-cmd:`:show imports` 来查看作用域中的模块。
 
-You can add a module to the scope (via :ghci-cmd:`:module` or ``import``) only
-if either (a) it is loaded, or (b) it is a module from a package that
-GHCi knows about. Using :ghci-cmd:`:module` or ``import`` to try bring into
-scope a non-loaded module may result in the message
-``module M is not loaded``.
+只有在两种情况下才能将一个模块加入作用域 (通过 :ghci-cmd:`:module` 或 ``import``)，
+满足 (a) 该模块已被加载，或者 (b) 该模块来自于 GHCi 认识的包。如果尝试用
+:ghci-cmd:`:module` 或 ``import`` 去把一个尚未加载的模块加入作用域，则会报出这样的信息：
+``模块 M 尚未被加载`` (``module M is not loaded``)。
 
 The ``:main`` and ``:run`` commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
