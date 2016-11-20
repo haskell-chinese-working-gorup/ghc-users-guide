@@ -760,17 +760,14 @@ Qualified 名字
 :ghci-cmd:`:module` 或 ``import`` 去把一个尚未加载的模块加入作用域，则会报出这样的信息：
 ``模块 M 尚未被加载`` (``module M is not loaded``)。
 
-The ``:main`` and ``:run`` commands
+``:main`` 和 ``:run`` 命令
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When a program is compiled and executed, it can use the ``getArgs``
-function to access the command-line arguments. However, we cannot simply
-pass the arguments to the ``main`` function while we are testing in
-ghci, as the ``main`` function doesn't take its directly.
+当一个程序被编译并执行时，它可以使用 ``getArgs`` 函数来获取命令行参数。不过，当我们在 GHCi 中
+测试 ``main`` 函数时，并不能这么简单地把参数传给它，因为当前并不是命令行环境。
 
-Instead, we can use the :ghci-cmd:`:main` command. This runs whatever ``main``
-is in scope, with any arguments being treated the same as command-line
-arguments, e.g.:
+要做到这点，我们需要使用 :ghci-cmd:`:main` 命令。该命令会执行当前作用域下的 ``main`` 函数，
+并把命令本身收到的参数作为命令行参数传递给 ``main``，举例如下：
 
 .. code-block:: none
 
@@ -778,9 +775,8 @@ arguments, e.g.:
     Prelude> :main foo bar
     ["foo","bar"]
 
-We can also quote arguments which contains characters like spaces, and
-they are treated like Haskell strings, or we can just use Haskell list
-syntax:
+我们也可以给包含空格的参数加上引号，它们会被当作正常的 Haskell 字符串。另外，我们还可以
+使用数组来书写：
 
 .. code-block:: none
 
@@ -789,8 +785,9 @@ syntax:
     Prelude> :main ["foo", "bar baz"]
     ["foo","bar baz"]
 
-Finally, other functions can be called, either with the ``-main-is``
-flag or the :ghci-cmd:`:run` command:
+最后，我们还可以把其他函数当做 ``main`` 来执行：可以使用 ``-main-is`` 把任意一个函数
+设置为 ``main`` 函数并用 :ghci-cmd:`:main` 来执行，也可以使用 :ghci-cmd:`:run` 直接
+调用。
 
 .. code-block:: none
 
