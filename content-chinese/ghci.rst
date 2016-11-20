@@ -801,15 +801,14 @@ Qualified 名字
     bar
     ["foo","bar baz"]
 
-The ``it`` variable
+``it`` 变量
 ~~~~~~~~~~~~~~~~~~~
 
 .. index::
-   single: it variable
+   single: it 变量
 
-Whenever an expression (or a non-binding statement, to be precise) is
-typed at the prompt, GHCi implicitly binds its value to the variable
-``it``. For example:
+当我们在提示符输入一个表达式 (或者准确地说，是一个非绑定语句) 时，GHCi 会隐式地把运算结果
+绑定到变量 ``it`` 上。例如：
 
 .. code-block:: none
 
@@ -818,19 +817,17 @@ typed at the prompt, GHCi implicitly binds its value to the variable
     Prelude> it * 2
     6
 
-What actually happens is that GHCi typechecks the expression, and if it
-doesn't have an ``IO`` type, then it transforms it as follows: an
-expression ``e`` turns into
+此时实际发生的是，GHCi 会检查这个表达式的类型，如果不是 ``IO`` 类型，就会将你输入的
+表达式 ``e`` 转化为下面的内容：
 
 .. code-block:: none
 
     let it = e;
     print it
 
-which is then run as an IO-action.
+这两句自然是作为一个 IO 操作来执行的。
 
-Hence, the original expression must have a type which is an instance of
-the ``Show`` class, or GHCi will complain:
+因此，原来你输入的表达式的类型，必须是 ``Show`` 的实例，否则 GHCi 会报错：
 
 .. code-block:: none
 
@@ -843,12 +840,10 @@ the ``Show`` class, or GHCi will complain:
         In the expression: print it
         In a 'do' expression: print it
 
-The error message contains some clues as to the transformation happening
-internally.
+从错误信息中，我们也可以看出这个内部变换的一些端倪。
 
-If the expression was instead of type ``IO a`` for some ``a``, then
-``it`` will be bound to the result of the ``IO`` computation, which is
-of type ``a``. eg.:
+如果这个表达式的类型是 ``IO a``，那 ``it`` 就会被绑定到这个 IO 计算的结果上，其类型
+是 ``a``。例如：
 
 .. code-block:: none
 
@@ -857,14 +852,13 @@ of type ``a``. eg.:
     Prelude> print it
     Wed Mar 14 12:23:13 GMT 2001
 
-The corresponding translation for an IO-typed ``e`` is
+IO 类型的表达式 ``e``，经过的内部变换就是这样的了：
 
 .. code-block:: none
 
     it <- e
 
-Note that ``it`` is shadowed by the new value each time you evaluate a
-new expression, and the old value of ``it`` is lost.
+注意，每次求值计算一个新的表达式，``it`` 都会被覆盖，之前的值就会丢失。
 
 .. _extended-default-rules:
 
