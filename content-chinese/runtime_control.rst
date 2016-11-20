@@ -1,48 +1,41 @@
 .. _runtime-control:
 
-Running a compiled program
+运行一个编译过的程序
 ==========================
 
 .. index::
-   single: runtime control of Haskell programs
-   single: running, compiled program
-   single: RTS options
+   single: Haskell 程序的运行时控制
+   single: 运行，编译过的程序
+   single: RTS 选项
 
-To make an executable program, the GHC system compiles your code and
-then links it with a non-trivial runtime system (RTS), which handles
-storage management, thread scheduling, profiling, and so on.
+要产生一个可执行的程序，GHC 系统编译你的代码之后用一个简洁的运行时系统 (RTS) 链接它，这个系统处理存储管理，线程调度，分析等等。
 
-The RTS has a lot of options to control its behaviour. For example, you
-can change the context-switch interval, the default size of the heap,
-and enable heap profiling. These options can be passed to the runtime
-system in a variety of different ways; the next section
-(:ref:`setting-rts-options`) describes the various methods, and the
-following sections describe the RTS options themselves.
+
+RTS 有大量的选项控制它自己的行为。比如，你可以改变上下文切换的速度，堆的默认容量以及启用堆分析。这些选项通过多种不同的方式传递给运行时系统；下一部分(:ref:`setting-rts-options`)描述了这几种方式，后面的部分描述了 RTS 选项本身。
 
 .. _setting-rts-options:
 
-Setting RTS options
+设置运行时选项
 -------------------
 
 .. index::
-   single: RTS options, setting
+   single: RTS 选项, 设置
 
-There are four ways to set RTS options:
+有四种方式设置 RTS 选项：
 
--  on the command line between ``+RTS ... -RTS``, when running the
-   program (:ref:`rts-opts-cmdline`)
+-  当运行程序时，在 ``+RTS ... -RTS`` 之间的命令行上设置 (:ref:`rts-opts-cmdline`)
 
--  at compile-time, using :ghc-flag:`-with-rtsopts`
+-  在编译期间， 使用 :ghc-flag:`-with-rtsopts` 设置
    (:ref:`rts-opts-compile-time`)
 
--  with the environment variable :envvar:`GHCRTS`
+-  使用环境变量 :envvar:`GHCRTS` 设置
    (:ref:`rts-options-environment`)
 
--  by overriding "hooks" in the runtime system (:ref:`rts-hooks`)
+-  依靠重载运行时系统中的 "hooks" (:ref:`rts-hooks`) 来设置
 
 .. _rts-opts-cmdline:
 
-Setting RTS options on the command line
+在命令行上设置 RTS 选项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
