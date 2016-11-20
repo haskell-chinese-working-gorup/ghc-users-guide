@@ -1,32 +1,24 @@
 .. _using-concurrent:
 
-Using Concurrent Haskell
+使用并行Haskell
 ------------------------
 
 .. index::
    single: Concurrent Haskell; using
 
-GHC supports Concurrent Haskell by default, without requiring a special
-option or libraries compiled in a certain way. To get access to the
-support libraries for Concurrent Haskell, just import
-:base-ref:`Control.Concurrent <Control-Concurrent.html>`.
-More information on Concurrent Haskell is provided in the documentation
-for that module.
+GHC不需要一个特殊的选项或者用一个固定的方式来编译库就能本身默认支持并行。
+只需要 import：base-ref:`Control.Concurrent <Control-Concurrent.html>` 来取得并行Haskell的库的支持。
+在文档里提供了更多关于并行Haskell的信息。
 
-Optionally, the program may be linked with the :ghc-flag:`-threaded` option (see
-:ref:`options-linker`. This provides two benefits:
+或者，程序可以连接到 :ghc-flag:`-threaded` 选项 （参考:ref:`options-linker`。这样做两种好处：
 
-- It enables the :rts-flag:`-N` to be used, which allows threads to run in
-  parallelism on a multi-processor or multi-core machine. See :ref:`using-smp`.
+- 它支持:rts-flag:`-N`，这个能让线程在多处理器或者多核机器上同时（并行）运行。看 :ref:`using-smp`。
 
-- If a thread makes a foreign call (and the call is not marked
-  ``unsafe``), then other Haskell threads in the program will continue
-  to run while the foreign call is in progress. Additionally,
-  ``foreign export``\ ed Haskell functions may be called from multiple
-  OS threads simultaneously. See :ref:`ffi-threads`.
+- 如果一个线程中进行了一个外部的调用（并且这个调用没有标记为``unsafe``），
+  那么在这个程序中的其它Haskell线程将在这个外部调用进行的时候同时运行。
+  另外，``foreign export``\ ed Haskell方程可能同时被多个OS线程调用。 参考:ref:`ffi-threads`。
 
-The following RTS option(s) affect the behaviour of Concurrent Haskell
-programs:
+以下RTS 选项 会影响并行Haskell程序的表现：
 
 .. index::
    single: RTS options; concurrent
@@ -35,46 +27,36 @@ programs:
 
     :default: 20 milliseconds
 
-    Sets the context switch interval to ⟨s⟩ seconds.
-    A context switch will occur at the next heap block allocation after
-    the timer expires (a heap block allocation occurs every 4k of
-    allocation). With ``-C0`` or ``-C``, context switches will occur as
-    often as possible (at every heap block allocation).
+    设定上下文切换的时间间隔至<s>秒。
+    上下文切换讲发生在下一个堆的内存块分配在计时时间逾时之后（每4千次分配发生一次堆的内存块分配）。
+    用``-C0`` 或者 ``-C``， 上下文切换将尽可能多地发生 （每次堆的内存块分配都会发生）。
 
 .. _using-smp:
 
-Using SMP parallelism
+用SMP平行化
 ---------------------
 
 .. index::
    single: parallelism
    single: SMP
 
-GHC supports running Haskell programs in parallel on an SMP (symmetric
-multiprocessor).
+GHC支持Haskell程序在对称多处理器电脑上“平行”地运行。
 
-There's a fine distinction between *concurrency* and *parallelism*:
-parallelism is all about making your program run *faster* by making use
-of multiple processors simultaneously. Concurrency, on the other hand,
-is a means of abstraction: it is a convenient way to structure a program
-that must respond to multiple asynchronous events.
+有一个方法很很好地区分出*concurrency*和*parallelism*：
+parallelism是关于通过同时使用多个处理器来使你的程序*更快*。而Concurrency是一种抽象的方法：
+它是一个比较好的来构建一个能响应多个非同步事件的方法。
 
-However, the two terms are certainly related. By making use of multiple
-CPUs it is possible to run concurrent threads in parallel, and this is
-exactly what GHC's SMP parallelism support does. But it is also possible
-to obtain performance improvements with parallelism on programs that do
-not use concurrency. This section describes how to use GHC to compile
-and run parallel programs, in :ref:`lang-parallel` we describe the
-language features that affect parallelism.
+然而，这两个术语是有着密切的联系的。通过利用多CPU能让线程并行运行变为了可能，这也正是GHC的SMP平行化支持所做的事情。
+但是也有可能在非并行的程序上用平行化来获得性能上的提升。这部分讲述了如何使用GHC来编译并且运行“平行”程序，在:ref:`lang-parallel`中
+我们讲述了影响平行化的语言特征。
 
 .. _parallel-compile-options:
 
-Compile-time options for SMP parallelism
+SMP平行化的编译时间选项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to make use of multiple CPUs, your program must be linked with
-the :ghc-flag:`-threaded` option (see :ref:`options-linker`). Additionally, the
-following compiler options affect parallelism:
+为了用多CPU，你的程序必须连接:ghc-flag:`-threaded`选项 （参考:ref:`options-linker`）。另外，
+一下编译选项影响平行化：
 
 .. ghc-flag:: -feager-blackholing
 
@@ -85,6 +67,7 @@ following compiler options affect parallelism:
     space leak, and thirdly it avoids repeating a computation in a
     parallel program, because we can tell when a computation is already
     in progress.
+
 
     The option ``-feager-blackholing`` causes each thunk to be
     blackholed as soon as evaluation begins. The default is "lazy
