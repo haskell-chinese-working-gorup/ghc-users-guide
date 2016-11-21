@@ -1,46 +1,29 @@
 .. _packages:
 
-Packages
-========
+包
+===
 
 .. index::
-   single: packages
+   single: 包
 
-A package is a library of Haskell modules known to the compiler. GHC
-comes with several packages: see the accompanying `library
-documentation <../libraries/index.html>`__. More packages to install can
-be obtained from
-`HackageDB <http://hackage.haskell.org/packages/hackage.html>`__.
+包是一个相对编译器来说的概念，一个包就是一个编译器已知的函数库，GHC 本身会附带一些包一起发布：请参考 `核心函数库文档 <https://downloads.haskell.org/~ghc/latest/docs/html/libraries/index.html>`__ 。其他的包可以从 `HackageDB <http://hackage.haskell.org/packages/hackage.html>`__ 上获得。
 
-Using a package couldn't be simpler: if you're using ``--make`` or GHCi,
-then most of the installed packages will be automatically available to
-your program without any further options. The exceptions to this rule
-are covered below in :ref:`using-packages`.
+包的使用也非常简单：如果你使用 ``--make`` 或者 GHCi 的话，你不需要额外的选项就可以在程序中使用大部分安装过的包了，小部分例外请参考下面的 :ref:`使用包 <using-packages>` 。
 
-Building your own packages is also quite straightforward: we provide the
-`Cabal <http://www.haskell.org/cabal/>`__ infrastructure which automates
-the process of configuring, building, installing and distributing a
-package. All you need to do is write a simple configuration file, put a
-few files in the right places, and you have a package. See the `Cabal
-documentation <http://www.haskell.org/cabal/users-guide/>`__ for
-details, and also the Cabal libraries
-(:cabal-ref:`Distribution.Simple <Distribution-Simple.html>`,
-for example).
+编译你自己的包也相当容易：我们提供了 `Cabal <http://www.haskell.org/cabal/>`__ 工具来自动化配置、编译、安装和发行的过程。你只需要书写一个简单的配置文件，并保证一些文件出现在正确的位置，你的包就完成啦。更多细节请参考 `Cabal 文档 <http://www.haskell.org/cabal/users-guide/>`__ ，或者参考 Cabal 函数库的文档（例如 :cabal-ref:`Distribution.Simple <Distribution-Simple.html>` ）。
+
 
 .. _using-packages:
 
-Using Packages
---------------
+使用包
+------
 
 .. index::
-   single: packages; using
+   single: 包; 使用
 
-GHC only knows about packages that are *installed*. Installed packages live in
-package databases. For details on package databases and how to control which
-package databases or specific set of packages are visible to GHC, see
-:ref:`package-databases`.
+GHC 只知道 *已经安装* 了的包的信息。安装了的包会被保存在包数据库中。关于包数据库本身、如何操作包数据库以及如何指定 GHC 可见的包，请参考 :ref:`包数据库 <package-databases>` 。
 
-To see which packages are currently available, use the ``ghc-pkg list`` command:
+查看当前哪些包可以被使用的命令是 ``ghc-pkg list`` ：
 
 .. code-block:: none
 
@@ -84,38 +67,17 @@ To see which packages are currently available, use the ``ghc-pkg list`` command:
         unix-2.3.1.0
         utf8-string-0.3.4
 
-An installed package is either *exposed* or *hidden* by default.
-Packages hidden by default are listed in parentheses (e.g.
-``(lang-1.0)``), or possibly in blue if your terminal supports colour,
-in the output of ``ghc-pkg list``. Command-line flags, described below,
-allow you to expose a hidden package or hide an exposed one. Only
-modules from exposed packages may be imported by your Haskell code; if
-you try to import a module from a hidden package, GHC will emit an error
-message. It should be noted that a hidden package might still get linked
-with your program as a dependency of an exposed package, it is only restricted
-from direct imports.
+安装之后的包默认有两种可能的状态：*公开* 或者 *隐藏* ，处于隐藏状态的包在上面的列表中会被显示在括号里（例如 ``(lang-1.0)`` ），如果你的终端支持彩色显示，它们还会被显示成蓝色。后面会介绍如何把公开一个隐藏的包或者隐藏一个公开的包；如果你试图引入一个隐藏的包，GHC
+会报错。不过需要注意的是隐藏的包仍然可能通过一个公开的包被作为依赖被链接进你的程序，它们只是无法被直接引入。
 
-If there are multiple exposed versions of a package, GHC will
-prefer the latest one. Additionally, some packages may be broken: that
-is, they are missing from the package database, or one of their
-dependencies are broken; in this case; these packages are excluded from
-the default set of packages.
+如果存在一个包的多个公开版本，GHC 会选择最新的那个版本。除此之外，一些包可能会损坏：它们可能从包数据库里被清除了，或者它们的某些依赖损坏了；这些情况下它们会从 GHC 可见的包集合中删除。
 
 .. note::
-    If you're using Cabal, then the exposed or hidden status of a
-    package is irrelevant: the available packages are instead determined by
-    the dependencies listed in your ``.cabal`` specification. The
-    exposed/hidden status of packages is only relevant when using ``ghc`` or
-    ``ghci`` directly.
+    如果你使用 Cabal，那么一个包的公开或者隐藏对你不会造成影响：可以使用的包只取决于你在 ``.cabal`` 文件中列出的依赖。包的公开或者隐藏仅仅影响直接使用 ``ghc`` 或者 ``ghci`` 。
 
-Similar to a package's hidden status is a package's trusted status. A
-package can be either trusted or not trusted (distrusted). By default
-packages are distrusted. This property of a package only plays a role
-when compiling code using GHC's Safe Haskell feature (see
-:ref:`safe-haskell`) with the ``-fpackage-trust`` flag enabled.
+和一个包的隐藏状态类似的是一个包的信任状态，一个包有信任和不信任两种状态，默认所有的包都是不被信任的。这个属性仅仅用来编译使用了 GHC 的安全Haskell特性 （ :ref:`safe-haskell` ） 的代码，并且打开了 ``-fpackage-trust`` 选项时才会起到作用。
 
-To see which modules are provided by a package use the ``ghc-pkg``
-command (see :ref:`package-management`):
+查看一个包提供了哪些模块，可以使用命令 ``ghc-pkg`` （请参考 :ref:`包管理 <package-management>` ）：
 
 .. code-block:: none
 
@@ -126,7 +88,7 @@ command (see :ref:`package-management`):
                      Network.URI,
                      Network
 
-The GHC command line options that control packages are:
+以下是用来控制包的 GHC 命令行选项：
 
 .. ghc-flag:: -package ⟨pkg⟩
 
@@ -353,7 +315,7 @@ in lieu of the :ref:`rebindable-syntax` extension.
 
 .. _package-databases:
 
-Package Databases
+包数据库
 -----------------
 
 A package database is where the details about installed packages are
