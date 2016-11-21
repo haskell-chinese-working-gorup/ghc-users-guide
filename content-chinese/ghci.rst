@@ -862,27 +862,25 @@ IO 类型的表达式 ``e``，经过的内部变换就是这样的了：
 
 .. _extended-default-rules:
 
-Type defaulting in GHCi
+GHCi 中类型的默认具体化
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. index::
-   single: Type defaulting; in GHCi
-   single: Show class
+   single: 类型默认策略; GHCi 中
+   single: Show 类型类
 
 .. ghc-flag:: -XExtendedDefaultRules
 
-    Allow defaulting to take place for more than just numeric classes.
+    允许数字类型类以外的情况下，触发类型的默认具体化
 
-Consider this GHCi session:
+考虑如下 GHCi 会话：
 
 .. code-block:: none
 
       ghci> reverse []
 
-What should GHCi do? Strictly speaking, the program is ambiguous.
-``show (reverse [])`` (which is what GHCi computes here) has type
-``Show a => String`` and how that displays depends on the type ``a``.
-For example:
+GHCi 会做些什么？严格来说，这段程序是有歧义的。 ``show (reverse [])`` (GHCi 会计算这个)
+的类型是 ``Show a => String``，而最终显示的结果取决于 ``a`` 的类型。例如：
 
 .. code-block:: none
 
@@ -891,31 +889,27 @@ For example:
       ghci> reverse ([] :: [Int])
       []
 
-However, it is tiresome for the user to have to specify the type, so
-GHCi extends Haskell's type-defaulting rules (Section 4.3.4 of the
-Haskell 2010 Report) as follows. The standard rules take each group of
-constraints ``(C1 a, C2 a, ..., Cn a)`` for each type variable ``a``,
-and defaults the type variable if
+不过，如果总是需要用户来指定类型还是有点麻烦，所以 GHCi 就扩展了 Haskell 的默认类型策略的
+规则 (Haskell 2010 report 的 4.3.4 小节)，具体如下。标准规则会参考每个类型变量 ``a`` 上
+的限制条件 ``(C1 a, C2 a, ..., Cn a)``，只有满足以下条件，才会给该类型变量一个默认类型：
 
-1. The type variable ``a`` appears in no other constraints
+1. 类型变量 ``a`` 不再其它限制条件中出现。
 
-2. All the classes ``Ci`` are standard.
+2. 所有 ``Ci`` 都是标准类型类 (译者注：标准类型类，参见 Haskell 2010 report，6.3 小节)。
 
-3. At least one of the classes ``Ci`` is numeric.
+3. `Ci` 中至少有一个类型类是数字类型的 (numeric)。
 
-At the GHCi prompt, or with GHC if the :ghc-flag:`-XExtendedDefaultRules` flag
-is given, the following additional differences apply:
+而在 GHCi 提示符下，也包括 :ghc-flag:`-XExtendedDefaultRules` 标记的 GHC，额外增加
+了以下规则：
 
--  Rule 2 above is relaxed thus: *All* of the classes ``Ci`` are
-   single-parameter type classes.
+-  放宽上面的第二条规则：所有类型类 ``Ci`` 只需要是单参数类型类即可。
 
--  Rule 3 above is relaxed this: At least one of the classes ``Ci`` is
-   an *interactive class* (defined below).
+-  放宽上面的第三条规则：``Ci`` 中至少有一个是*交互式类型类* (下一小节有定义)
 
--  The unit type ``()`` and the list type ``[]`` are added to the start of
-   the standard list of types which are tried when doing type defaulting.
+-  在做类型的默认具体化时，标准类型中增加了，单元类型 (unit type) ``()`` 和
+   列表类型 ``[]``。
 
-The last point means that, for example, this program: ::
+下面这个程序很好地反映了最后一点的作用：
 
     main :: IO ()
     main = print def
@@ -925,50 +919,43 @@ The last point means that, for example, this program: ::
     def :: (Num a, Enum a) => a
     def = toEnum 0
 
-prints ``()`` rather than ``0`` as the type is defaulted to ``()``
-rather than ``Integer``.
+此代码会打印出 ``()`` 而不是 ``0``，因为 ``def`` 的类型被默认为 ``()``，
+而不是 ``Integer``。
 
-The motivation for the change is that it means ``IO a`` actions default
-to ``IO ()``, which in turn means that ghci won't try to print a result
-when running them. This is particularly important for ``printf``, which
-has an instance that returns ``IO a``. However, it is only able to
-return ``undefined`` (the reason for the instance having this type is so
-that printf doesn't require extensions to the class system), so if the
-type defaults to ``Integer`` then ghci gives an error when running a
-printf.
+这样修改的目的，是为了让 ``IO a`` 默认类型变成 ``IO ()``，这样 GHCi 就不需要在
+执行这个 IO 的时候把结果打印出来了。这一点对 ``printf`` 来说很重要，因为
+它有个实例，返回的类型就是 ``IO a``。不过它只能返回 ``undefined`` (之所以会有这个
+类型的实例，是为了让 `printf` 不依赖任何类型系统的扩展)，所以如果把类型默认为
+``Integer``，那 GHCi 在运行 printf 时就会报错。
 
-See also :ref:`actions-at-prompt` for how the monad of a computational
-expression defaults to ``IO`` if possible.
+关于处在 monad 中的计算型表达式是如何尽可能默认为 ``IO`` 类型的，
+也可参考 :ref:`actions-at-prompt`。
 
-Interactive classes
+交互式类型类
 ^^^^^^^^^^^^^^^^^^^
 
 .. index::
-   single: Interactive classes
+   single: 交互式类型类
 
-The interactive classes (only relevant when :ghc-flag:`-XExtendedDefaultRules`
-is in effect) are: any numeric class, ``Show``, ``Eq``, ``Ord``,
-``Foldable`` or ``Traversable``.
+交互式类型类 (开启 :ghc-flag:`-XExtendedDefaultRules` 时才会涉及此概念) 包括：
+所有数字类型类、``Show``、``Eq``、``Ord``、``Foldable`` 以及 ``Traversable``。
 
-As long as a type variable is constrained by one of these classes, defaulting
-will occur, as outlined above.
+只有一个类型变量受到以上类型类的约束，类型的默认具体化就会被触发，大致策略如上述。
 
-Extended rules around ``default`` declarations
+
+``default`` 声明相关的扩展规则
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. index::
-   single: default declarations
+   single: default 声明
 
-Since the rules for defaulting are relaxed under
-:ghc-flag:`-XExtendedDefaultRules`, the rules for ``default`` declarations
-are also relaxed. According to Section 4.3.4 of the Haskell 2010 Report,
-a ``default`` declaration looks like ``default (t1, ..., tn)`` where, for
-each ``ti``, ``Num ti`` must hold. This is relaxed to say that for each
-``ti``, there must exist an interactive class ``C`` such that ``C ti`` holds.
-This means that type *constructors* can be allowed in these lists.
-For example, the following works if you wish your ``Foldable`` constraints
-to default to ``Maybe`` but your ``Num`` constraints to still default
-to ``Integer`` or ``Double``: ::
+在开启 :ghc-flag:`-XExtendedDefaultRules 的情况下，除了类型的默认具体化规则被放宽，
+``default`` 声明的规则也被放宽了。根据 Haskell 2010 Report 中 4.3.4 小节所描述的，
+一个 ``default`` 声明形如 ``default (t1, ..., tn)``，对于其中每一个 ``ti``，都
+必须满足 ``Num ti`` 成立。而这条规则也会被放宽为，对于每一个 ``ti``，存在一个交互式
+类型类 ``C``，是的 ``C ti`` 成立即可。这意味着 ``default`` 的参数中就可以使用
+类型构造器了。例如，如果你希望 ``Foldable`` 约束默认都使用 ``Maybe`` 类型，而 ``Num``
+约束仍然默认为 ``Integer`` 或 ``Double``，那就可以像下面这么写：
 
     default (Maybe, Integer, Double)
 
