@@ -967,41 +967,36 @@ Using a custom interactive printing function
 .. index::
    single: Custom printing function; in GHCi
 
-Since GHC 7.6.1, GHCi prints the result of expressions typed at the prompt
-using the function ``System.IO.print``. Its type signature is ``Show a => a ->
-IO ()``, and it works by converting the value to ``String`` using ``show``.
+自从 GHC 7.6.1，GHCi 就开始使用 ``System.IO.print`` 来打印提示符下输入的表达式的结果。
+它的类型签名是 ``Show a => a -> IO ()``，其工作机制就是用 ``show`` 把结果
+转为 ``String``。
 
-This is not ideal in certain cases, like when the output is long, or
-contains strings with non-ascii characters.
+在某些场景下，这并不是最理想的处理方式，比如对于很长的输出，或是包含非 ascii 码的字符。
 
-The :ghc-flag:`-interactive-print` flag allows to specify any function of type
-``C a => a -> IO ()``, for some constraint ``C``, as the function for
-printing evaluated expressions. The function can reside in any loaded
-module or any registered package, but only when it resides in a registered
-package will it survive a :ghci-cmd:`:cd`, :ghci-cmd:`:add`, :ghci-cmd:`:load`,
-:ghci-cmd:`:reload` or, :ghci-cmd:`:set`.
+使用 :ghc-flag:`-interactive-print` 标记，可以把任何类型为 ``C a => a -> IO ()`` 的
+函数设置为求值结果的打印函数。该函数可以放在任何已加载的模块或是已注册的包中。不过只有当该函数
+是处在一个已注册的包中时，:ghci-cmd:`:cd`、:ghci-cmd:`:add`、:ghci-cmd:`:load`、
+:ghci-cmd:`:reload` 以及 :ghci-cmd:`:set` 命令才不会影响其使用。
 
 .. ghc-flag:: -interactive-print <expr>
 
     Set the function used by GHCi to print evaluation results. Expression
     must be of type ``C a => a -> IO ()``.
 
-As an example, suppose we have following special printing module: ::
+作为示例，假设我们有如下一个特殊的打印模块：
 
     module SpecPrinter where
     import System.IO
 
     sprint a = putStrLn $ show a ++ "!"
 
-The ``sprint`` function adds an exclamation mark at the end of any
-printed value. Running GHCi with the command:
+``sprint`` 函数会在每一个打印结果后加上一个感叹号。使用如下命令启动 GHCi：
 
 .. code-block:: none
 
-    ghci -interactive-print=SpecPrinter.sprinter SpecPrinter
+    ghci -interactive-print=SpecPrinter.sprint SpecPrinter
 
-will start an interactive session where values with be printed using
-``sprint``:
+这样就会启动一个使用 ``sprint`` 作为打印函数的会话：
 
 .. code-block:: none
 
@@ -1010,11 +1005,9 @@ will start an interactive session where values with be printed using
     *SpecPrinter> 42
     42!
 
-A custom pretty printing function can be used, for example, to format
-tree-like and nested structures in a more readable way.
+当然，也可以使用一些格式化打印的函数，例如，把树形嵌套结构的数据类型，格式化为更易读的输出。
 
-The :ghc-flag:`-interactive-print` flag can also be used when running GHC in
-``-e mode``:
+GHC 在 ``-e`` 模式下也可使用 :ghc-flag:`-interactive-print` 标记：
 
 .. code-block:: none
 
