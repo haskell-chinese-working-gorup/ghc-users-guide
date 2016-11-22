@@ -1016,50 +1016,42 @@ GHC 在 ``-e`` 模式下也可使用 :ghc-flag:`-interactive-print` 标记：
 
 .. _ghci-stack-traces:
 
-Stack Traces in GHCi
+GHCi 中的调用栈跟踪
 ~~~~~~~~~~~~~~~~~~~~
 
 .. index::
-  simple: stack trace; in GHCi
+  simple: 调用栈跟踪; GHCi 中
 
-[ This is an experimental feature enabled by the new
-``-fexternal-interpreter`` flag that was introduced in GHC 8.0.1.  It
-is currently not supported on Windows.]
+[ 本功能是在 GHC 8.0.1 中引入的实验功能，可以通过 ``-fexternal-interpreter`` 标记开启，
+  目前尚不支持 Windows。]
 
-GHCi can use the profiling system to collect stack trace information
-when running interpreted code.  To gain access to stack traces, start
-GHCi like this:
+GHCi 可以通过性能分析系统 (profiling system) 来收集在运行解释型代码时的调用栈跟踪信息。
+想要开启这个功能，请按照如下命令启动 GHCi:
 
 .. code-block:: none
 
     ghci -fexternal-interpreter -prof
 
-This runs the interpreted code in a separate process (see
-:ref:`external-interpreter`) and runs it in profiling mode to collect
-call stack information.  Note that because we're running the
-interpreted code in profiling mode, all packages that you use must be
-compiled for profiling.  The ``-prof`` flag to GHCi only works in
-conjunction with ``-fexternal-interpreter``.
+这样就会在一个单独的进程中运行解释型代码 (参见 :ref:`external-interpreter`)，并开启性能
+分析模式来收集调用栈信息。注意，由于我们是在性能分析模式下运行解释型代码，因此你使用的所有的包
+都必须是为性能分析而编译的版本。GHCi 的 ``-prof`` 标记只有在和
+``-fexternal-interpreter`` 一起使用时才管用。
 
-There are three ways to get access to the current call stack.
+有三种方式可以获取当前的调用栈。
 
-- ``error`` and ``undefined`` automatically attach the current stack
-  to the error message.  This often complements the ``HasCallStack``
-  stack (see :ref:`hascallstack`), so both call stacks are
-  shown.
+- ``error`` 和 ``undefined`` 会自动调取当前的调用栈，并附加到错误信息中。通常这里还会
+  带上 ``HasCallStack`` 的调用栈信息 (参见 :ref:`hascallstack`)，因此两个调用栈都会
+  被输出。
 
-- ``Debug.Trace.traceStack`` is a version of ``Debug.Trace.trace``
-  that also prints the current call stack.
+- ``Debug.Trace.traceStack`` 是 ``Debug.Trace.trace`` 的一种形式，它也会打印出
+  当前调用栈。
 
-- Functions in the module ``GHC.Stack`` can be used to get the current
-  stack and render it.
+- ``GHC.Stack`` 模块中的函数，也可以被用来获取并输出当前调用栈。
 
-You don't need to use ``-fprof-auto`` for interpreted modules,
-annotations are automatically added at a granularity fine enough to
-distinguish individual call sites.  However, you won't see any call
-stack information for compiled code unless it was compiled with
-``-fprof-auto`` or has explicit ``SCC`` annotations (see
-:ref:`scc-pragma`).
+对于解释型的模块，你不必显示地使用 ``-fprof-auto``，GHCi 会自动为代码加上注释，并且
+粒度足够细，可以区分出每一个调用点 (call site)。不过，你可能会看不到编译型代码的调用栈
+信息，除非它们是开启 ``-fprof-auto`` 进行编译的，或者显示地使用了 ``SCC` 标记 (参见
+:ref:`scc-pragma`)。
 
 .. _ghci-debugger:
 
