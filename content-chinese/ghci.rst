@@ -1055,47 +1055,34 @@ GHCi 可以通过性能分析系统 (profiling system) 来收集在运行解释�
 
 .. _ghci-debugger:
 
-The GHCi Debugger
+GHCi 的调试器
 -----------------
 
 .. index::
-   single: debugger; in GHCi
+   single: 调试器; GHCi 中
 
-GHCi contains a simple imperative-style debugger in which you can stop a
-running computation in order to examine the values of variables. The
-debugger is integrated into GHCi, and is turned on by default: no flags
-are required to enable the debugging facilities. There is one major
-restriction: breakpoints and single-stepping are only available in
-interpreted modules; compiled code is invisible to the debugger [5]_.
+GHCi 中包含了一个简单的类似过程式语言的调试器，你可以用它往正在执行的代码总打断点，然后
+查看变量的值。这个调试器是集成在 GHCi 中，且默认打开的：不需要任何额外的开关就可以使用
+调试功能。不过有一个很大的限制是，只能在解释型的模块中使用断点和单步调试，调试器对编译型
+的代码无能为力 [5]_。
 
-The debugger provides the following:
+调试器提供了如下功能：
 
--  The ability to set a breakpoint on a function definition or
-   expression in the program. When the function is called, or the
-   expression evaluated, GHCi suspends execution and returns to the
-   prompt, where you can inspect the values of local variables before
-   continuing with the execution.
+-  可以在函数定义或者是表达式中设置断点。当这个函数被调用，或者表达式被求值时，GHCi 会
+   暂停代码的执行，返回到提示符，然后就可以检查本地变量的值，完了之后继续运行。
 
--  Execution can be single-stepped: the evaluator will suspend execution
-   approximately after every reduction, allowing local variables to be
-   inspected. This is equivalent to setting a breakpoint at every point
-   in the program.
+-  代码可以单步调试：大概在每次规约 (reduction) 之后，求值器 (evaluator) 都会暂停执行，
+   好让我们去查看变量的值。这就相当于是在每一行代码上都加了断点。
 
--  Execution can take place in tracing mode, in which the evaluator
-   remembers each evaluation step as it happens, but doesn't suspend
-   execution until an actual breakpoint is reached. When this happens,
-   the history of evaluation steps can be inspected.
+-  也可以把代码执行放在追踪模式 (tracing mode) 下进行，求值器会记录下每一步求值的过程，
+   直到碰上真正的断点才暂停运行，此时，就可以查看之前所有求值过程的信息。
 
--  Exceptions (e.g. pattern matching failure and ``error``) can be
-   treated as breakpoints, to help locate the source of an exception in
-   the program.
+-  异常 (比如，模式匹配失败，或 ``error``) 也可以被看作是断点，以此来定位发生异常的
+   代码位置。
 
-There is currently no support for obtaining a “stack trace”, but the
-tracing and history features provide a useful second-best, which will
-often be enough to establish the context of an error. For instance, it
-is possible to break automatically when an exception is thrown, even if
-it is thrown from within compiled code (see
-:ref:`ghci-debugger-exceptions`).
+目前还不支持“调用栈跟踪”功能，不过跟踪模式加上求值历史回看也已经是个不错的选择了，通常应该
+足够定位一个错误了。举例来说，每当抛出异常时，就会作为断点自动暂停运行，即使是编译型代码中
+的异常也适用 (参见 :ref:`ghci-debugger-exceptions`)。
 
 .. _breakpoints:
 
