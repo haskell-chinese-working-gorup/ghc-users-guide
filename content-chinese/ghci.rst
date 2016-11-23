@@ -1086,10 +1086,10 @@ GHCi 中包含了一个简单的类似过程式语言的调试器，你可以用
 
 .. _breakpoints:
 
-Breakpoints and inspecting variables
+断点与变量检查
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's use quicksort as a running example. Here's the code: ::
+我们以快排作为示例，代码如下：
 
     qsort [] = []
     qsort (a:as) = qsort left ++ [a] ++ qsort right
@@ -1097,7 +1097,7 @@ Let's use quicksort as a running example. Here's the code: ::
 
     main = print (qsort [8, 4, 0, 3, 1, 23, 11, 18])
 
-First, load the module into GHCi:
+首先，把模块加载进 GHCi：
 
 .. code-block:: none
 
@@ -1106,8 +1106,7 @@ First, load the module into GHCi:
     Ok, modules loaded: Main.
     *Main>
 
-Now, let's set a breakpoint on the right-hand-side of the second
-equation of qsort:
+然后，我们在 qsort 第二个语句的等号右侧，打上一个断点：
 
 .. code-block:: none
 
@@ -1115,13 +1114,11 @@ equation of qsort:
     Breakpoint 0 activated at qsort.hs:2:15-46
     *Main>
 
-The command ``:break 2`` sets a breakpoint on line 2 of the most
-recently-loaded module, in this case ``qsort.hs``. Specifically, it
-picks the leftmost complete subexpression on that line on which to set
-the breakpoint, which in this case is the expression
-``(qsort left ++ [a] ++ qsort right)``.
+``:break 2`` 命令会在最新加载的模块的第 2 行设置一个断点，我们这儿就是 ``qsort.hs``。
+实际上，断点是打在了那一行中最长的完整子表达式 (subexpression) 上，在上例中，也就是
+ ``(qsort left ++ [a] ++ qsort right)``。
 
-Now, we run the program:
+现在，我们来运行程序：
 
 .. code-block:: none
 
@@ -1133,10 +1130,8 @@ Now, we run the program:
     right :: [a]
     [qsort.hs:2:15-46] *Main>
 
-Execution has stopped at the breakpoint. The prompt has changed to
-indicate that we are currently stopped at a breakpoint, and the
-location: ``[qsort.hs:2:15-46]``. To further clarify the location, we
-can use the :ghci-cmd:`:list` command:
+代码执行停在了断点处。提示符也会告诉我们，目前正停在一个断点上，并且还有断点的位置
+``[qsort.hs:2:15-46]``。想要搞清楚这个位置的具体代码，可以使用 :ghci-cmd:`:list` 命令。
 
 .. code-block:: none
 
@@ -1145,18 +1140,14 @@ can use the :ghci-cmd:`:list` command:
     2  qsort (a:as) = qsort left ++ [a] ++ qsort right
     3    where (left,right) = (filter (<=a) as, filter (>a) as)
 
-The :ghci-cmd:`:list` command lists the source code around the current
-breakpoint. If your output device supports it, then GHCi will highlight
-the active subexpression in bold.
+:ghci-cmd:`:list` 命令列出了当前断点附近的源代码。如果你的设备支持，GHCi 还会用粗体标出
+当前断点所在的子表达式。
 
-GHCi has provided bindings for the free variables [6]_ of the expression
-on which the breakpoint was placed (``a``, ``left``, ``right``), and
-additionally a binding for the result of the expression (``_result``).
-These variables are just like other variables that you might define in
-GHCi; you can use them in expressions that you type at the prompt, you
-can ask for their types with :ghci-cmd:`:type`, and so on. There is one
-important difference though: these variables may only have partial
-types. For example, if we try to display the value of ``left``:
+GHCi 为断点所在表达式提供了自由变量 (free variables) 的绑定 (上例包含 ``a``、
+``left`` 以及 ``right``)，以及整个表达式计算结果的绑定 (``_result``)。这些变量
+和你在 GHCi 中定义的普通变量是一样的。你可以输入包含这些变量的表达式，你也可以通过
+:ghci-cmd:`:type` 来查看它们的类型，等等。不过有一个区别需要说明，就是这些变量
+可能是不完整类型的 (partial type)。例如，如果我们尝试输出 ``left`` 的值：
 
 .. code-block:: none
 
@@ -1168,15 +1159,12 @@ types. For example, if we try to display the value of ``left``:
         Cannot resolve unknown runtime types: a
         Use :print or :force to determine these types
 
-This is because ``qsort`` is a polymorphic function, and because GHCi
-does not carry type information at runtime, it cannot determine the
-runtime types of free variables that involve type variables. Hence, when
-you ask to display ``left`` at the prompt, GHCi can't figure out which
-instance of ``Show`` to use, so it emits the type error above.
+这是因为 ``qsort`` 是个多态的函数，又因为 GHCi 并不会去获取运行时的类型信息，所以它
+不能把类型变量转化为运行时这些自由变量的实际类型。因此，当我们在提示符下想要输出 ``left`` 时，
+GHCi 不知道该使用哪个类型的 `Show` 实例，就报了上面那样的错误信息。
 
-Fortunately, the debugger includes a generic printing command,
-:ghci-cmd:`:print`, which can inspect the actual runtime value of a variable and
-attempt to reconstruct its type. If we try it on ``left``:
+幸运的是，调试器中包含了一个泛型的打印命令，:ghci-cmd:`:print`，它可以打印出一个变量在
+运行时的实际值，并由此确定它的类型。下面我们就用它来试着打印 ``left``：
 
 .. code-block:: none
 
@@ -1184,34 +1172,27 @@ attempt to reconstruct its type. If we try it on ``left``:
     [qsort.hs:2:15-46] *Main> :print left
     left = (_t1::[a])
 
-This isn't particularly enlightening. What happened is that ``left`` is
-bound to an unevaluated computation (a suspension, or thunk), and
-:ghci-cmd:`:print` does not force any evaluation. The idea is that
-:ghci-cmd:`:print` can be used to inspect values at a breakpoint without any
-unfortunate side effects. It won't force any evaluation, which could cause the
-program to give a different answer than it would normally, and hence it won't
-cause any exceptions to be raised, infinite loops, or further breakpoints to be
-triggered (see :ref:`nested-breakpoints`). Rather than forcing thunks,
-:ghci-cmd:`:print` binds each thunk to a fresh variable beginning with an
-underscore, in this case ``_t1``.
+这个结果好像也不是很有启发。实际情况是，``left`` 被绑定到了一个未求值的计算上 (suspension
+ or thunk)，而 :ghci-cmd:`:print` 并不会强制求值。这么设计，是为了让
+ :ghci-cmd:`:print` 的使用，不至于会在断点检查变量时，造成任何额副作用。而也是因为不会
+ 强制求值，所以我们看到的打印结果和一般正常情况有所不同，因此也不会触发任何的异常、死循环或是
+ 进入下一个断点 (参见 :ref:`nested-breakpoints`) 的情况。:ghci-cmd:`:print` 会将每个
+  thunk 绑定到一个下划线开头的新变量上，此处为 ``_t1``，而不是强制计算这些 thunk。
 
-The flag :ghc-flag:`-fprint-evld-with-show` instructs :ghci-cmd:`:print` to reuse
-available ``Show`` instances when possible. This happens only when the
-contents of the variable being inspected are completely evaluated.
+:ghc-flag:`-fprint-evld-with-show` 标记会让 :ghci-cmd:`:print` 尽量使用 ``Show``
+的实例去打印表达式的值。不过这有在检查的变量已经完全被求值后才能尝试使用它的 ``Show`` 实例。
 
-If we aren't concerned about preserving the evaluatedness of a variable, we can
-use :ghci-cmd:`:force` instead of :ghci-cmd:`:print`. The :ghci-cmd:`:force`
-command behaves exactly like :ghci-cmd:`:print`, except that it forces the
-evaluation of any thunks it encounters:
+如果并不在乎维持变量的求值状态，我们也可以使用 :ghci-cmd:`:force` 来替代
+:ghci-cmd:`:print`。:ghci-cmd:`:force` 命令做的事情和 :ghci-cmd:`:print` 基本一样，
+除了它会强制对遇到的任何 thunk 进行求值：
 
 .. code-block:: none
 
     [qsort.hs:2:15-46] *Main> :force left
     left = [4,0,3,1]
 
-Now, since :ghci-cmd:`:force` has inspected the runtime value of ``left``, it
-has reconstructed its type. We can see the results of this type
-reconstruction:
+此时，由于是使用 :ghci-cmd:`:force` 来查看 ``left`` 的值，顺带就重新构建了变量的类型。
+我们可以来看看这些重新构建后的类型。
 
 .. code-block:: none
 
@@ -1222,18 +1203,16 @@ reconstruction:
     right :: [Integer]
     _t1 :: [Integer]
 
-Not only do we now know the type of ``left``, but all the other partial
-types have also been resolved. So we can ask for the value of ``a``, for
-example:
+我们现在不仅知道了 ``left`` 的类型，还获得所有其他不完整类型的类型。然后，我们就可以查看
+a 的值了，如下：
 
 .. code-block:: none
 
     [qsort.hs:2:15-46] *Main> a
     8
 
-You might find it useful to use Haskell's ``seq`` function to evaluate
-individual thunks rather than evaluating the whole expression with
-:ghci-cmd:`:force`. For example:
+你可能会发现有一招还挺有用，即使用 Haskell 中的 ``seq`` 来单独对 thunk 进行求值，而不是
+用 :ghci-cmd:`:force` 来对整个表达式求值，例如：
 
 .. code-block:: none
 
@@ -1244,12 +1223,11 @@ individual thunks rather than evaluating the whole expression with
     [qsort.hs:2:15-46] *Main> :print right
     right = 23 : (_t2::[Integer])
 
-We evaluated only the ``_t1`` thunk, revealing the head of the list, and
-the tail is another thunk now bound to ``_t2``. The ``seq`` function is
-a little inconvenient to use here, so you might want to use :ghci-cmd:`:def` to
-make a nicer interface (left as an exercise for the reader!).
+我们只是求值了 ``_t1`` thunk，得到了列表的第一个元素，列表的剩余部分是绑定到 ``_t2``
+ 上的另一个 thunk。总是输入 ``seq`` 函数好像用起来不太方便，你也可以使用 :ghci-cmd:`:def`
+ 来定义一个专门的命令来执行这个操作 (这个就留给读者作为练习了！)。
 
-Finally, we can continue the current execution:
+最后，我们可以继续当前的代码执行：
 
 .. code-block:: none
 
@@ -1261,8 +1239,7 @@ Finally, we can continue the current execution:
     right :: [a]
     [qsort.hs:2:15-46] *Main>
 
-The execution continued at the point it previously stopped, and has now
-stopped at the breakpoint for a second time.
+代码会从之前的断点处继续执行，然后就又一次停在了这个断点上。
 
 .. _setting-breakpoints:
 
