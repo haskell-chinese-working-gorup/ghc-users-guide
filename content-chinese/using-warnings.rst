@@ -1,10 +1,10 @@
 .. _options-sanity:
 
-警告和 sanity-checking
-----------------------------
+警告和可用性检查
+----------------
 
 .. index::
-   single: sanity-checking options
+   single: 可用性检查的选项
    single: 警告
 
 GHC 有许多标志可供你选择在编译过程中生成何种非致命错误信息的类型，
@@ -108,11 +108,9 @@ GHC 有许多标志可供你选择在编译过程中生成何种非致命错误�
 
     该标志默认是关闭的。
 
-The full set of warning options is described below. To turn off any
-warning, simply give the corresponding ``-Wno-...`` option on the
-command line. For backwards compatibility with GHC versions prior to 8.0,
-all these warnings can still be controlled with ``-f(no-)warn-*`` instead
-of ``-W(no-)*``.
+下面会列出警告的全套选项。想关闭任何一个警告的话，仅需在命令行给该选项加
+一个相应的 ``-Wno-...`` 即可。如果想向前兼容8.0之前的 GHC 版本的话，可以
+使用 ``-f(no-)warn-*`` 替代 ``-W(no-)*`` 来进行控制。
 
 .. ghc-flag:: -Wunrecognised-warning-flags
 
@@ -122,102 +120,87 @@ of ``-W(no-)*``.
 
 .. ghc-flag:: -Wtyped-holes
 
-    Determines whether the compiler reports typed holes warnings. Has no
-    effect unless typed holes errors are deferred until runtime. See
-    :ref:`typed-holes` and :ref:`defer-type-errors`
+    是否让编译器报 typed holes 警告。除非 typed holes 错误被延迟到运行时，
+    否则不会生效。见 :ref:`typed-holes` 和 :ref:`defer-type-errors`。
 
     该标志默认是开启的。
 
 .. ghc-flag:: -Wtype-errors
 
-    Causes a warning to be reported when a type error is deferred until
-    runtime. See :ref:`defer-type-errors`
+    当一个类型错误被延迟到运行时的时候发出警告。见 :ref:`defer-type-errors`。
 
     该标志默认是开启的。
 
 .. ghc-flag:: -fdefer-type-errors
 
-    :implies: :ghc-flag:`-fdefer-typed-holes`
+    :涵盖了: :ghc-flag:`-fdefer-typed-holes`
 
-    Defer as many type errors as possible until runtime. At compile time
-    you get a warning (instead of an error). At runtime, if you use a
-    value that depends on a type error, you get a runtime error; but you
-    can run any type-correct parts of your code just fine. See
-    :ref:`defer-type-errors`
+    尽量延迟更多的类型错误至运行时。在编译阶段你会得到一个警告（而非错误）。
+    在运行时阶段，如果你使用了一个和某个类型错误有依赖的值，你会得到一个运行时
+    错误。但对于你代码中类型正确的那些部分都能运行无虞。见 :ref:`defer-type-errors`。
 
 .. ghc-flag:: -fdefer-typed-holes
 
-    Defer typed holes errors (errors about names with a leading underscore
-    (e.g., “_”, “_foo”, “_bar”)) until runtime. This will turn the errors
-    produced by :ref:`typed holes <typed-holes>` into warnings. Using a value
-    that depends on a typed hole produces a runtime error, the same as
-    :ghc-flag:`-fdefer-type-errors` (which implies this option). See :ref:`typed-holes`
-    and :ref:`defer-type-errors`.
+    延迟报 typed holes 错误（以下划线开头的命名错误，如“_”, “_foo”, “_bar”）至运行时。
+    该标志会将由 :ref:`typed holes <typed-holes>` 产生的错误转化成警告。
+    如同 :ghc-flag:`-fdefer-type-errors` 一样，使用一个依赖某个 typed hole 的值会产生
+    一个运行时错误。见 :ref:`typed-holes` 与 :ref:`defer-type-errors`。
 
-    Implied by :ghc-flag:`-fdefer-type-errors`. See also :ghc-flag:`-Wtyped-holes`.
+    该选项被 :ghc-flag:`-fdefer-type-errors` 所涵盖。另见 :ghc-flag:`-Wtyped-holes`。
 
 .. ghc-flag:: -fdefer-out-of-scope-variables
 
-    Defer variable out of scope errors (errors about names without a leading underscore)
-    until runtime. This will turn variable-out-of-scope errors into warnings.
-    Using a value that depends on a typed hole produces a runtime error,
-    the same as :ghc-flag:`-fdefer-type-errors` (which implies this option).
-    See :ref:`typed-holes` and :ref:`defer-type-errors`.
+    延迟变量超出作用域错误（有关命名非下划线开头的错误）至运行时。该选项会把变量超出
+    作用域（variable-out-of-scope）错误转化成警告。使用一个依赖某个 typed hole 的值
+    会产生一个运行时错误，同于 :ghc-flag:`-fdefer-type-errors` （该选项涵盖本选项）。
+    见 :ref:`typed-holes` 与 :ref:`defer-type-errors`。
 
-    Implied by :ghc-flag:`-fdefer-type-errors`. See also :ghc-flag:`-Wdeferred-out-of-scope-variables`.
+    该选项被 :ghc-flag:`-fdefer-type-errors` 所涵盖。 另见 :ghc-flag:`-Wdeferred-out-of-scope-variables`。
 
 .. ghc-flag:: -Wpartial-type-signatures
 
-    Determines whether the compiler reports holes in partial type
-    signatures as warnings. Has no effect unless
-    :ghc-flag:`-XPartialTypeSignatures` is enabled, which controls whether
-    errors should be generated for holes in types or not. See
-    :ref:`partial-type-signatures`.
+    该选项决定编译器是否对部分类型签名（partial type signatures）中的 holes 报作警告。只有
+    当开启了 :ghc-flag:`-XPartialTypeSignatures` 这个用来控制对于在类型中存在 holes 是否报错
+    的选项时才会生效。见 :ref:`partial-type-signatures`。
 
-    This warning is on by default.
+    该警告默认是开启的。
 
 .. ghc-flag:: -fhelpful-errors
 
-    When a name or package is not found in scope, make suggestions for
-    the name or package you might have meant instead.
+    若在作用域内未发现某个命名或是包，则对可能是你想要的命名或是包做一个提示。
 
-    This option is on by default.
+    该选项默认是开启的。
 
 .. ghc-flag:: -Wunrecognised-pragmas
 
-    Causes a warning to be emitted when a pragma that GHC doesn't
-    recognise is used. As well as pragmas that GHC itself uses, GHC also
-    recognises pragmas known to be used by other tools, e.g.
-    ``OPTIONS_HUGS`` and ``DERIVE``.
+    当 GHC 无法识别某个编译选项时触发一个警告。除了 GHC 自己使用的那些编译选项外，
+    GHC 还能识别一些熟知的其它工具所使用的编译选项，诸如 ``OPTIONS_HUGS`` 与 ``DERIVE``。
 
-    This option is on by default.
+    该选项默认是开启的。
 
 .. ghc-flag:: -Wmissed-specialisations
               -Wall-missed-specialisations
 
-    Emits a warning if GHC cannot specialise an overloaded function, usually
-    because the function needs an ``INLINABLE`` pragma. The "all" form reports
-    all such situations whereas the "non-all" form only reports when the
-    situation arises during specialisation of an imported function.
+    当 GHC 不能实例化（specialise）一个重载的函数时会发出一个警告，这时通常是因为该函数需要
+    一个 ``INLINABLE`` 的编译选项。使用带 "all" 的选项会报告所有的这样的情况，而不带 "all" 的
+    形式仅对一个导入的函数在实例化过程中出现这样的问题时才发出警告。
 
-    The "non-all" form is intended to catch cases where an imported function
-    that is marked as ``INLINABLE`` (presumably to enable specialisation) cannot
-    be specialised as it calls other functions that are themselves not specialised.
+    该不带 "all" 的选项多用于捕获这样一种情形：当一个导入的函数被标记为 ``INLINABLE`` （假定可
+    实例化），而在它调用了其它不可实例化的函数后不能被实例化。
 
-    Note that these warnings will not throw errors if used with :ghc-flag:`-Werror`.
+    注意这些警告在和 :ghc-flag:`-Werror` 共用时不会抛出错误。
 
-    These options are both off by default.
+    这两个选项默认都是关闭的。
 
 .. ghc-flag:: -Wwarnings-deprecations
 
     .. index::
        pair: deprecations; warnings
 
-    Causes a warning to be emitted when a module, function or type with
-    a ``WARNING`` or ``DEPRECATED pragma`` is used. See
-    :ref:`warning-deprecated-pragma` for more details on the pragmas.
+    当使用了一个存在 ``WARNING`` 或 ``DEPRECATED pragma`` 问题的模块、函数或者类型
+    时触发一个警告。有关编译选项的更多详情请见 :ref:`warning-deprecated-pragma`。
 
-    This option is on by default.
+    该选项默认是开启的。
 
 .. ghc-flag:: -Wamp
 
@@ -248,7 +231,7 @@ of ``-W(no-)*``.
      * Warn if ``pure`` is defined backwards (i.e. ``pure = return``).
      * Warn if ``(*>)`` is defined backwards (i.e. ``(*>) = (>>)``).
 
-    This option is off by default.
+    该选项默认是关闭的。
 
 .. ghc-flag:: -Wnoncanonical-monadfail-instances
 
@@ -268,9 +251,9 @@ of ``-W(no-)*``.
      * Warn if ``fail`` is defined backwards
        (i.e. ``fail = Control.Monad.fail``).
 
-    See also :ghc-flag:`-Wmissing-monadfail-instances`.
+    另见 :ghc-flag:`-Wmissing-monadfail-instances`.
 
-    This option is off by default.
+    该选项默认是关闭的。
 
 .. ghc-flag:: -Wnoncanonical-monoid-instances
 
@@ -289,7 +272,7 @@ of ``-W(no-)*``.
 
      * Warn if ``(<>)`` is defined backwards (i.e. ``(<>) = mappend``).
 
-    This warning is off by default. However, it is part of the
+    该警告默认是关闭的。 However, it is part of the
     :ghc-flag:`-Wcompat` option group.
 
 .. ghc-flag:: -Wmissing-monadfail-instances
@@ -301,7 +284,7 @@ of ``-W(no-)*``.
     Warn when a failable pattern is used in a do-block that does not have a
     ``MonadFail`` instance.
 
-    See also :ghc-flag:`-Wnoncanonical-monadfail-instances`.
+    另见 :ghc-flag:`-Wnoncanonical-monadfail-instances`.
 
     Being part of the :ghc-flag:`-Wcompat` option group, this warning is off by
     default, but will be switched on in a future GHC release, as part of
@@ -331,7 +314,7 @@ of ``-W(no-)*``.
     Causes a warning to be emitted when a deprecated command-line flag
     is used.
 
-    This option is on by default.
+    该选项默认是开启的.
 
 .. ghc-flag:: -Wunsupported-calling-conventions
 
@@ -431,7 +414,7 @@ of ``-W(no-)*``.
     Similar warnings are given for a redundant constraint in an instance
     declaration.
 
-    This option is on by default. As usual you can suppress it on a
+    该选项默认是开启的. As usual you can suppress it on a
     per-module basis with :ghc-flag:`-Wno-redundant-constraints`.
     Occasionally you may specifically want a function to have a more
     constrained signature than necessary, perhaps to leave yourself
@@ -458,7 +441,7 @@ of ``-W(no-)*``.
     to avoid the continued export of a definition after you've deleted
     (one) mention of it in the export list.
 
-    This option is on by default.
+    该选项默认是开启的.
 
 .. ghc-flag:: -Whi-shadowing
 
@@ -494,7 +477,7 @@ of ``-W(no-)*``.
     ``Prelude`` refers to the actual Prelude module, regardless of the
     imports of the module being compiled).
 
-    This warning is off by default.
+    该警告默认是关闭的。
 
 .. ghc-flag:: -Wincomplete-patterns
               -Wincomplete-uni-patterns
@@ -559,7 +542,7 @@ of ``-W(no-)*``.
        single: missing fields, warning
        single: fields, missing
 
-    This option is on by default, and warns you whenever the
+    该选项默认是开启的, and warns you whenever the
     construction of a labelled field constructor isn't complete, missing
     initialisers for one or more fields. While not an error (the missing
     fields are initialised with bottoms), it is often an indication of a
@@ -593,7 +576,7 @@ of ``-W(no-)*``.
        single: missing methods, warning
        single: methods, missing
 
-    This option is on by default, and warns you whenever an instance
+    该选项默认是开启的, and warns you whenever an instance
     declaration is missing one or more methods, and the corresponding
     class declaration has no default declaration for them.
 
@@ -672,7 +655,7 @@ of ``-W(no-)*``.
     option is used in conjunction with
     :ghc-flag:`-Wmissing-exported-signatures` then only exported pattern
     synonyms must have a type signature. GHC also reports the inferred
-    type. This option is off by default.
+    type. 该选项默认是关闭的。
 
 .. ghc-flag:: -Wname-shadowing
 
@@ -750,7 +733,7 @@ of ``-W(no-)*``.
 
        f :: Eq a => a -> a
 
-    This option is on by default. As usual you can suppress it on a
+    该选项默认是开启的. As usual you can suppress it on a
     per-module basis with :ghc-flag:`-Wno-simplifiable-class-constraints`.
 
 .. ghc-flag:: -Wtabs
@@ -774,7 +757,7 @@ of ``-W(no-)*``.
     ``Integer``. This may lead to differences in performance and
     behaviour, hence the usefulness of being non-silent about this.
 
-    This warning is off by default.
+    该警告默认是关闭的。
 
 .. ghc-flag:: -Wmonomorphism-restriction
 
@@ -786,7 +769,7 @@ of ``-W(no-)*``.
     give rise to unexpected behaviour, so it can be helpful to have an
     explicit warning that it is being applied.
 
-    This warning is off by default.
+    该警告默认是关闭的。
 
 .. ghc-flag:: -Wunsupported-llvm-version
 
@@ -1005,4 +988,7 @@ of ``-W(no-)*``.
 If you're feeling really paranoid, the :ghc-flag:`-dcore-lint` option is a good choice.
 It turns on heavyweight intra-pass sanity-checking within GHC. (It checks GHC's
 sanity, not yours.)
+
+如果你还是心存怀疑，那么使用 :ghc-flag:`-dcore-lint` 选项是个不错的选择，它会
+打开 GHC 内部 pass 之间最严格的可用性检查。（它检查的是GHC是否粗心大意，而不是你）
 
